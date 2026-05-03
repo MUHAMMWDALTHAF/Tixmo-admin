@@ -1,1 +1,1628 @@
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dream Dubai — Control Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Figtree:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #f5f4f0;
+  --white:    #ffffff;
+  --surface:  #faf9f7;
+  --border:   #e8e4de;
+  --border2:  #f0ede8;
+  --text:     #1a1714;
+  --muted:    #7a7068;
+  --dim:      #b0a898;
+  --accent:   #2d1fa3;
+  --accent-l: #ede9fb;
+  --accent-m: #6a56d4;
+  --pink:     #d4245a;
+  --pink-l:   #fce8ef;
+  --gold:     #c4860a;
+  --gold-l:   #fdf3e0;
+  --green:    #1a7a4a;
+  --green-l:  #e4f5ec;
+  --red:      #c0362a;
+  --red-l:    #fde8e6;
+  --amber:    #b05c10;
+  --amber-l:  #fef0e2;
+  --shadow-sm: 0 1px 3px rgba(26,23,20,0.06), 0 1px 2px rgba(26,23,20,0.04);
+  --shadow:    0 4px 16px rgba(26,23,20,0.08), 0 1px 4px rgba(26,23,20,0.05);
+  --shadow-lg: 0 12px 40px rgba(26,23,20,0.12), 0 4px 12px rgba(26,23,20,0.06);
+  --radius:   14px;
+  --radius-sm: 8px;
+  --radius-lg: 20px;
+}
+
+- { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+body {
+background: var(–bg);
+font-family: ‘Figtree’, sans-serif;
+color: var(–text);
+min-height: 100vh;
+overflow-x: hidden;
+font-size: 14px;
+line-height: 1.5;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeIn   { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeLeft { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:translateX(0)} }
+@keyframes scaleIn  { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+@keyframes slideUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse    { 0%,100%{opacity:1} 50%{opacity:0.35} }
+@keyframes spin     { to{transform:rotate(360deg)} }
+@keyframes shimmer  { 0%{transform:translateX(-150%)} 100%{transform:translateX(250%)} }
+@keyframes tick     { 0%{transform:translateY(0)} 50%{transform:translateY(-3px)} 100%{transform:translateY(0)} }
+@keyframes barGrow  { from{width:0} to{width:var(–w)} }
+@keyframes countUp  { from{opacity:0;transform:scale(0.85)} to{opacity:1;transform:scale(1)} }
+@keyframes glow     { 0%,100%{box-shadow:0 0 0 3px rgba(45,31,163,0.1)} 50%{box-shadow:0 0 0 6px rgba(45,31,163,0.18)} }
+@keyframes floatIn  {
+0%   { opacity:0; transform:translateY(30px) scale(0.97); }
+100% { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* ── SHELL ── */
+.shell { display:flex; min-height:100vh; }
+
+/* ═══════════════════════════════════════
+SIDEBAR
+═══════════════════════════════════════ */
+.sidebar {
+width: 256px; flex-shrink:0;
+background: var(–white);
+border-right: 1px solid var(–border);
+display: flex; flex-direction:column;
+position: sticky; top:0; height:100vh;
+overflow-y: auto;
+animation: fadeLeft 0.45s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.brand {
+padding: 22px 20px 18px;
+border-bottom: 1px solid var(–border2);
+display: flex; align-items:center; gap:12px;
+}
+.brand-logo {
+width: 40px; height: 40px; border-radius: 12px;
+background: var(–text);
+display: flex; align-items:center; justify-content:center;
+font-size: 18px; flex-shrink:0;
+}
+.brand-words { line-height:1.15; }
+.brand-name { font-family:‘Playfair Display’,serif; font-size:15px; font-weight:700; color:var(–text); }
+.brand-sub  { font-size:10px; font-weight:600; color:var(–dim); letter-spacing:1.8px; text-transform:uppercase; }
+
+.nav-label {
+padding: 18px 20px 6px;
+font-size:9.5px; font-weight:700; color:var(–dim);
+letter-spacing:2px; text-transform:uppercase;
+}
+
+.nav-item {
+display: flex; align-items:center; gap:10px;
+padding: 9px 14px; margin: 1px 8px;
+border-radius: var(–radius-sm);
+cursor: pointer; font-size:13.5px; font-weight:500; color:var(–muted);
+transition: background 0.15s, color 0.15s;
+border: none; background:transparent; width:calc(100% - 16px);
+text-align:left; font-family:‘Figtree’,sans-serif;
+position:relative;
+}
+.nav-item:hover { background:var(–bg); color:var(–text); }
+.nav-item.active { background:var(–accent-l); color:var(–accent); font-weight:600; }
+.nav-item.active .nav-icon { color:var(–accent); }
+.nav-icon { font-size:15px; width:20px; text-align:center; flex-shrink:0; }
+.nav-badge {
+margin-left:auto; background:var(–pink); color:#fff;
+font-size:9px; font-weight:700; padding:2px 7px; border-radius:20px; letter-spacing:0.3px;
+}
+.nav-badge.green { background:var(–green); }
+
+.sidebar-foot {
+margin-top:auto; padding:16px 12px;
+border-top:1px solid var(–border2);
+}
+.admin-card {
+display:flex; align-items:center; gap:10px;
+padding:10px 12px; border-radius:var(–radius-sm);
+background:var(–bg); cursor:pointer;
+transition:background 0.15s;
+}
+.admin-card:hover { background:var(–border2); }
+.admin-av {
+width:34px; height:34px; border-radius:50%;
+background:var(–text); color:var(–white);
+display:flex; align-items:center; justify-content:center;
+font-size:12px; font-weight:800; flex-shrink:0;
+}
+.admin-name { font-size:13px; font-weight:700; }
+.admin-role { font-size:10.5px; color:var(–muted); }
+.online-dot { width:8px; height:8px; border-radius:50%; background:var(–green); margin-left:auto; animation:pulse 2s infinite; }
+
+/* ═══════════════════════════════════════
+MAIN
+═══════════════════════════════════════ */
+.main { flex:1; display:flex; flex-direction:column; min-width:0; }
+
+/* TOPBAR */
+.topbar {
+background:var(–white); border-bottom:1px solid var(–border);
+padding:0 32px; height:62px;
+display:flex; align-items:center; justify-content:space-between;
+position:sticky; top:0; z-index:40;
+animation: fadeIn 0.3s ease both;
+}
+.topbar-left { display:flex; flex-direction:column; }
+.page-title { font-family:‘Playfair Display’,serif; font-size:19px; font-weight:700; color:var(–text); line-height:1; }
+.page-crumb { font-size:11.5px; color:var(–muted); margin-top:2px; }
+.topbar-right { display:flex; align-items:center; gap:10px; }
+
+.tb-btn {
+padding:8px 16px; border-radius:var(–radius-sm);
+border:1px solid var(–border); background:var(–white);
+font-size:13px; font-weight:600; color:var(–text);
+cursor:pointer; font-family:‘Figtree’,sans-serif;
+display:flex; align-items:center; gap:6px;
+transition:all 0.15s; white-space:nowrap;
+}
+.tb-btn:hover { background:var(–bg); border-color:var(–accent-m); }
+.tb-btn.primary {
+background:var(–accent); border-color:var(–accent); color:#fff;
+}
+.tb-btn.primary:hover { background:#231890; }
+.tb-btn:active { transform:scale(0.97); }
+
+/* CONTENT */
+.content { flex:1; padding:28px 32px; overflow-y:auto; }
+
+/* ── PANEL ── */
+.panel { display:none; }
+.panel.active { display:block; animation:floatIn 0.4s cubic-bezier(0.22,1,0.36,1) both; }
+
+/* ═══════════════════════════════════════
+STAT CARDS
+═══════════════════════════════════════ */
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+
+.stat-card {
+background:var(–white); border:1px solid var(–border);
+border-radius:var(–radius); padding:20px 22px;
+position:relative; overflow:hidden;
+transition:box-shadow 0.2s, transform 0.2s;
+}
+.stat-card:hover { box-shadow:var(–shadow); transform:translateY(-1px); }
+.stat-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
+.stat-icon-wrap {
+width:40px; height:40px; border-radius:10px;
+display:flex; align-items:center; justify-content:center; font-size:18px;
+}
+.stat-trend {
+font-size:11.5px; font-weight:600; padding:3px 8px;
+border-radius:20px; display:flex; align-items:center; gap:3px;
+}
+.stat-trend.up { background:var(–green-l); color:var(–green); }
+.stat-trend.dn { background:var(–red-l); color:var(–red); }
+.stat-label { font-size:11.5px; font-weight:600; color:var(–muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px; }
+.stat-value { font-family:‘Playfair Display’,serif; font-size:30px; font-weight:700; line-height:1; color:var(–text); animation:countUp 0.5s ease; }
+.stat-bar { height:3px; background:var(–border2); border-radius:2px; margin-top:14px; overflow:hidden; }
+.stat-bar-fill { height:100%; border-radius:2px; –w:0%; animation:barGrow 1s cubic-bezier(0.22,1,0.36,1) 0.3s both; width:var(–w); }
+
+/* ═══════════════════════════════════════
+CARDS & LAYOUT
+═══════════════════════════════════════ */
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.grid-65 { display:grid; grid-template-columns:1.6fr 1fr; gap:16px; }
+.grid-56 { display:grid; grid-template-columns:1fr 1.5fr; gap:16px; }
+
+.card {
+background:var(–white); border:1px solid var(–border);
+border-radius:var(–radius); padding:22px 24px;
+transition:box-shadow 0.2s;
+}
+.card:hover { box-shadow:var(–shadow-sm); }
+
+.card-hdr {
+display:flex; align-items:center; justify-content:space-between;
+margin-bottom:18px; gap:10px;
+}
+.card-title {
+font-size:13.5px; font-weight:700; color:var(–text);
+display:flex; align-items:center; gap:8px;
+}
+.card-title-icon {
+width:28px; height:28px; border-radius:7px;
+display:flex; align-items:center; justify-content:center; font-size:14px;
+}
+.card-action { font-size:12.5px; color:var(–accent); font-weight:600; cursor:pointer; white-space:nowrap; }
+.card-action:hover { text-decoration:underline; }
+
+/* ═══════════════════════════════════════
+FORM ELEMENTS
+═══════════════════════════════════════ */
+.form-section { margin-bottom:20px; }
+.form-section-title {
+font-size:11px; font-weight:700; color:var(–dim); text-transform:uppercase;
+letter-spacing:1.5px; margin-bottom:12px; padding-bottom:8px;
+border-bottom:1px solid var(–border2);
+display:flex; align-items:center; gap:6px;
+}
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+.form-row.cols3 { grid-template-columns:1fr 1fr 1fr; }
+.form-row.cols1 { grid-template-columns:1fr; }
+.form-group { display:flex; flex-direction:column; gap:5px; }
+.form-group.span2 { grid-column:span 2; }
+
+label {
+font-size:11.5px; font-weight:600; color:var(–muted);
+letter-spacing:0.3px;
+}
+input[type=text], input[type=number], input[type=date], input[type=time],
+input[type=email], select, textarea {
+background:var(–surface); border:1.5px solid var(–border);
+color:var(–text); border-radius:var(–radius-sm);
+padding:9px 12px; font-size:13.5px;
+font-family:‘Figtree’,sans-serif; outline:none; width:100%;
+transition:border-color 0.15s, box-shadow 0.15s;
+appearance:none;
+}
+input:focus, select:focus, textarea:focus {
+border-color:var(–accent); box-shadow:0 0 0 3px rgba(45,31,163,0.08);
+background:var(–white);
+}
+textarea { resize:vertical; min-height:72px; }
+.input-wrap { position:relative; }
+.input-wrap .prefix {
+position:absolute; left:11px; top:50%; transform:translateY(-50%);
+font-size:13px; font-weight:600; color:var(–muted); pointer-events:none;
+}
+.input-wrap input { padding-left:26px; }
+select { background-image:url(“data:image/svg+xml,%3Csvg xmlns=‘http://www.w3.org/2000/svg’ width=‘12’ height=‘8’%3E%3Cpath d=‘M1 1l5 5 5-5’ stroke=’%237a7068’ stroke-width=‘1.5’ fill=‘none’ stroke-linecap=‘round’/%3E%3C/svg%3E”); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; }
+
+/* Buttons */
+.btn {
+padding:9px 18px; border-radius:var(–radius-sm);
+font-size:13.5px; font-weight:600; cursor:pointer;
+font-family:‘Figtree’,sans-serif; border:none;
+display:inline-flex; align-items:center; gap:7px;
+transition:all 0.15s; white-space:nowrap; position:relative; overflow:hidden;
+}
+.btn:active { transform:scale(0.97); }
+.btn-primary { background:var(–accent); color:#fff; }
+.btn-primary:hover { background:#231890; }
+.btn-secondary { background:var(–bg); border:1.5px solid var(–border); color:var(–text); }
+.btn-secondary:hover { background:var(–border2); }
+.btn-outline { background:transparent; border:1.5px solid var(–accent); color:var(–accent); }
+.btn-outline:hover { background:var(–accent-l); }
+.btn-danger { background:var(–red-l); border:1.5px solid #f5c0bc; color:var(–red); }
+.btn-danger:hover { background:#fbd4d0; }
+.btn-green { background:var(–green-l); border:1.5px solid #b8e8cc; color:var(–green); }
+.btn-green:hover { background:#cef0dc; }
+.btn-full { width:100%; justify-content:center; }
+.btn-lg { padding:12px 24px; font-size:14.5px; border-radius:10px; }
+.btn-sm { padding:6px 12px; font-size:12px; }
+
+.btn-row { display:flex; gap:10px; margin-top:4px; }
+
+/* ═══════════════════════════════════════
+TABLE
+═══════════════════════════════════════ */
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; }
+thead th {
+padding:9px 14px; text-align:left;
+font-size:11px; font-weight:700; color:var(–muted);
+text-transform:uppercase; letter-spacing:0.8px;
+border-bottom:1.5px solid var(–border);
+background:var(–surface); white-space:nowrap;
+}
+thead th:first-child { border-radius:var(–radius-sm) 0 0 0; }
+thead th:last-child  { border-radius:0 var(–radius-sm) 0 0; }
+tbody tr { border-bottom:1px solid var(–border2); transition:background 0.1s; }
+tbody tr:last-child { border:none; }
+tbody tr:hover { background:var(–surface); }
+tbody td { padding:11px 14px; vertical-align:middle; font-size:13.5px; }
+.td-mono { font-family:‘JetBrains Mono’,monospace; font-size:12px; color:var(–muted); }
+.td-bold { font-weight:700; }
+
+/* ═══════════════════════════════════════
+BADGES
+═══════════════════════════════════════ */
+.badge {
+display:inline-flex; align-items:center; gap:5px;
+padding:3px 9px; border-radius:20px; font-size:11.5px; font-weight:600;
+white-space:nowrap;
+}
+.badge-dot { width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
+.badge-green  { background:var(–green-l);  color:var(–green);  border:1px solid #b8e8cc; }
+.badge-yellow { background:var(–gold-l);   color:var(–gold);   border:1px solid #f0d090; }
+.badge-red    { background:var(–red-l);    color:var(–red);    border:1px solid #f5c0bc; }
+.badge-blue   { background:var(–accent-l); color:var(–accent); border:1px solid #c4baf5; }
+.badge-pink   { background:var(–pink-l);   color:var(–pink);   border:1px solid #f5b8cc; }
+.badge-amber  { background:var(–amber-l);  color:var(–amber);  border:1px solid #f0c898; }
+
+/* ═══════════════════════════════════════
+TOGGLE
+═══════════════════════════════════════ */
+.toggle-row {
+display:flex; align-items:center; justify-content:space-between;
+padding:11px 0; border-bottom:1px solid var(–border2);
+}
+.toggle-row:last-child { border:none; }
+.toggle-info .t-name { font-size:13.5px; font-weight:600; }
+.toggle-info .t-desc { font-size:12px; color:var(–muted); margin-top:1px; }
+.tog {
+width:42px; height:24px; border-radius:12px;
+background:var(–border); position:relative; cursor:pointer;
+transition:background 0.25s; flex-shrink:0;
+}
+.tog::after {
+content:’’; position:absolute;
+width:18px; height:18px; background:#fff; border-radius:50%;
+top:3px; left:3px; transition:left 0.22s;
+box-shadow:0 1px 4px rgba(0,0,0,0.18);
+}
+.tog.on { background:var(–accent); }
+.tog.on::after { left:21px; }
+
+/* ═══════════════════════════════════════
+CATEGORY PILLS
+═══════════════════════════════════════ */
+.cat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.cat-pill {
+border:1.5px solid var(–border); background:var(–surface);
+border-radius:10px; padding:12px 10px; cursor:pointer;
+text-align:center; transition:all 0.15s;
+}
+.cat-pill:hover { border-color:var(–accent-m); background:var(–accent-l); }
+.cat-pill.selected { border-color:var(–accent); background:var(–accent-l); }
+.cat-emoji { font-size:20px; margin-bottom:4px; }
+.cat-name  { font-size:11.5px; font-weight:700; color:var(–text); }
+.cat-count { font-size:10.5px; color:var(–muted); margin-top:1px; }
+
+/* ═══════════════════════════════════════
+COUNTDOWN
+═══════════════════════════════════════ */
+.countdown-strip {
+display:flex; gap:10px; align-items:center; justify-content:center;
+padding:16px; background:var(–surface);
+border:1.5px solid var(–border); border-radius:var(–radius);
+}
+.cd-block { text-align:center; min-width:56px; }
+.cd-val {
+font-family:‘Playfair Display’,serif; font-size:32px; font-weight:700;
+color:var(–accent); background:var(–white);
+border:1.5px solid var(–border); border-radius:10px;
+padding:8px 6px; line-height:1; display:block; text-align:center;
+min-width:56px; box-shadow:var(–shadow-sm);
+animation:tick 1s ease-in-out infinite;
+}
+.cd-val:nth-child(1) { animation-delay:0s; }
+.cd-lbl { font-size:9.5px; font-weight:700; color:var(–muted); text-transform:uppercase; letter-spacing:1px; margin-top:5px; }
+.cd-colon { font-size:28px; font-weight:700; color:var(–dim); padding-bottom:16px; }
+
+/* ═══════════════════════════════════════
+TICKET COUNTER
+═══════════════════════════════════════ */
+.counter-display {
+background:linear-gradient(135deg, var(–accent) 0%, #4a3bc8 100%);
+border-radius:var(–radius); padding:20px 24px; color:#fff; position:relative; overflow:hidden;
+}
+.counter-display::before {
+content:’’; position:absolute; right:-30px; top:-30px;
+width:140px; height:140px; border-radius:50%;
+background:rgba(255,255,255,0.06);
+}
+.counter-label { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; opacity:0.7; margin-bottom:6px; }
+.counter-num { font-family:‘Playfair Display’,serif; font-size:44px; font-weight:700; line-height:1; position:relative; z-index:1; }
+.counter-meta { display:flex; gap:16px; margin-top:14px; }
+.counter-meta-item { }
+.counter-meta-label { font-size:10px; opacity:0.65; text-transform:uppercase; letter-spacing:1px; margin-bottom:2px; }
+.counter-meta-val   { font-size:15px; font-weight:700; }
+.counter-bar { height:4px; background:rgba(255,255,255,0.2); border-radius:2px; margin-top:14px; overflow:hidden; }
+.counter-bar-fill { height:100%; background:rgba(255,255,255,0.8); border-radius:2px; transition:width 0.6s ease; }
+.sim-btns { display:flex; gap:8px; margin-top:14px; }
+.sim-btn {
+flex:1; padding:8px; border-radius:7px; cursor:pointer; font-weight:700;
+font-size:12px; font-family:‘Figtree’,sans-serif; border:none;
+background:rgba(255,255,255,0.18); color:#fff; transition:background 0.15s;
+}
+.sim-btn:hover { background:rgba(255,255,255,0.28); }
+.sim-btn.reset-btn { background:rgba(255,255,255,0.1); opacity:0.75; }
+
+/* ═══════════════════════════════════════
+WALLET CARD
+═══════════════════════════════════════ */
+.wallet-hero {
+background:var(–text);
+border-radius:var(–radius-lg); padding:28px 28px 24px;
+color:#fff; position:relative; overflow:hidden; margin-bottom:16px;
+}
+.wallet-hero::before {
+content:’’; position:absolute; right:-50px; bottom:-60px;
+width:220px; height:220px; border-radius:50%;
+background:rgba(255,255,255,0.04);
+}
+.wallet-hero::after {
+content:’’; position:absolute; right:30px; top:-40px;
+width:160px; height:160px; border-radius:50%;
+background:rgba(255,255,255,0.03);
+}
+.wallet-lbl { font-size:11px; font-weight:600; letter-spacing:1.8px; text-transform:uppercase; opacity:0.5; margin-bottom:6px; }
+.wallet-amt { font-family:‘Playfair Display’,serif; font-size:40px; font-weight:700; line-height:1.1; position:relative; z-index:1; }
+.wallet-cur { font-size:20px; opacity:0.6; }
+.wallet-stats { display:flex; gap:8px; margin-top:18px; position:relative; z-index:1; }
+.ws-item { flex:1; background:rgba(255,255,255,0.07); border-radius:10px; padding:12px 14px; }
+.ws-lbl { font-size:10px; opacity:0.55; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px; }
+.ws-val { font-size:16px; font-weight:700; }
+
+/* ═══════════════════════════════════════
+WINNER DRUM
+═══════════════════════════════════════ */
+.drum-card {
+background:var(–white); border:1.5px solid var(–border);
+border-radius:var(–radius); padding:24px;
+text-align:center;
+}
+.drum-title { font-family:‘Playfair Display’,serif; font-size:22px; font-weight:700; margin-bottom:4px; }
+.drum-sub { font-size:13px; color:var(–muted); margin-bottom:22px; }
+.winner-box {
+border:2px dashed var(–border); border-radius:var(–radius);
+padding:24px; min-height:90px; margin-bottom:18px;
+display:flex; align-items:center; justify-content:center; flex-direction:column;
+gap:6px; transition:all 0.3s; background:var(–surface);
+}
+.winner-box.lit {
+border:2px solid var(–gold); background:var(–gold-l);
+box-shadow:0 0 0 4px rgba(196,134,10,0.1);
+}
+.winner-name  { font-family:‘Playfair Display’,serif; font-size:24px; font-weight:700; color:var(–text); }
+.winner-id    { font-family:‘JetBrains Mono’,monospace; font-size:12px; color:var(–muted); }
+.winner-prize { font-size:13px; font-weight:600; color:var(–green); }
+.winner-placeholder { color:var(–dim); font-size:13.5px; font-weight:500; }
+.spin-icon { font-size:36px; animation:spin 0.8s linear infinite; display:none; }
+
+.draw-btns { display:flex; gap:10px; justify-content:center; margin-bottom:18px; }
+.draw-btn-spin {
+background:var(–text); color:#fff; border:none;
+padding:12px 28px; border-radius:10px; font-size:14px; font-weight:700;
+cursor:pointer; font-family:‘Figtree’,sans-serif;
+transition:background 0.15s, transform 0.12s;
+display:flex; align-items:center; gap:8px;
+}
+.draw-btn-spin:hover { background:#302c28; }
+.draw-btn-spin:active { transform:scale(0.96); }
+.draw-btn-reset {
+background:var(–bg); border:1.5px solid var(–border); color:var(–muted);
+padding:12px 20px; border-radius:10px; font-size:13px; font-weight:600;
+cursor:pointer; font-family:‘Figtree’,sans-serif; transition:background 0.15s;
+}
+
+/* ═══════════════════════════════════════
+PARTICIPANTS LIST
+═══════════════════════════════════════ */
+.part-list { display:flex; flex-direction:column; gap:5px; max-height:320px; overflow-y:auto; }
+.part-item {
+display:flex; align-items:center; gap:10px;
+padding:9px 12px; border-radius:var(–radius-sm);
+background:var(–surface); font-size:13px; font-weight:500;
+border:1px solid var(–border2); transition:background 0.15s;
+}
+.part-item:hover { background:var(–border2); }
+.part-item.hl { background:var(–gold-l); border-color:#f0d090; font-weight:700; }
+.part-num { font-family:‘JetBrains Mono’,monospace; font-size:10.5px; color:var(–dim); width:18px; }
+.part-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+
+/* ═══════════════════════════════════════
+TRANSACTIONS
+═══════════════════════════════════════ */
+.txn-item {
+display:flex; align-items:center; gap:12px;
+padding:12px 0; border-bottom:1px solid var(–border2);
+}
+.txn-item:last-child { border:none; }
+.txn-ico {
+width:38px; height:38px; border-radius:10px;
+display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0;
+}
+.txn-name { font-size:13.5px; font-weight:600; }
+.txn-date { font-size:11.5px; color:var(–muted); }
+.txn-amt  { margin-left:auto; font-family:‘JetBrains Mono’,monospace; font-size:14px; font-weight:700; }
+.txn-cr   { color:var(–green); }
+.txn-dr   { color:var(–red); }
+
+/* ═══════════════════════════════════════
+USER ROWS
+═══════════════════════════════════════ */
+.user-row {
+display:flex; align-items:center; gap:12px;
+padding:11px 0; border-bottom:1px solid var(–border2);
+}
+.user-row:last-child { border:none; }
+.user-av {
+width:38px; height:38px; border-radius:50%;
+display:flex; align-items:center; justify-content:center;
+font-size:13px; font-weight:800; flex-shrink:0; color:#fff;
+}
+.u-name  { font-size:13.5px; font-weight:700; }
+.u-email { font-size:12px; color:var(–muted); }
+.u-bal   { font-family:‘JetBrains Mono’,monospace; font-size:13px; font-weight:700; color:var(–green); text-align:right; }
+.u-date  { font-size:11px; color:var(–muted); text-align:right; }
+
+/* ═══════════════════════════════════════
+ANNOUNCEMENT CARD
+═══════════════════════════════════════ */
+.announce-card {
+background:var(–white); border:1.5px solid var(–border);
+border-radius:var(–radius); padding:22px 24px;
+position:relative; overflow:hidden;
+}
+.announce-accent {
+position:absolute; left:0; top:0; bottom:0; width:4px;
+border-radius:var(–radius) 0 0 var(–radius);
+}
+.announce-item {
+padding:13px 0; border-bottom:1px solid var(–border2);
+display:flex; align-items:flex-start; gap:14px;
+}
+.announce-item:last-child { border:none; padding-bottom:0; }
+.announce-date-block {
+width:52px; flex-shrink:0; text-align:center;
+background:var(–surface); border:1px solid var(–border2);
+border-radius:var(–radius-sm); padding:6px 4px;
+}
+.ann-month { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(–muted); }
+.ann-day   { font-family:‘Playfair Display’,serif; font-size:22px; font-weight:700; line-height:1; color:var(–text); }
+.ann-time  { font-size:9px; color:var(–muted); font-weight:500; margin-top:2px; }
+.announce-body { flex:1; }
+.ann-title { font-size:14px; font-weight:700; margin-bottom:3px; }
+.ann-desc  { font-size:12.5px; color:var(–muted); line-height:1.5; }
+.ann-tags  { display:flex; gap:6px; margin-top:7px; flex-wrap:wrap; }
+
+/* ═══════════════════════════════════════
+SEARCH INPUT
+═══════════════════════════════════════ */
+.search-wrap { position:relative; }
+.search-wrap input { padding-left:34px; }
+.search-ico { position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(–dim); font-size:14px; pointer-events:none; }
+
+/* ═══════════════════════════════════════
+NOTIFICATION TOAST
+═══════════════════════════════════════ */
+.toast {
+position:fixed; top:20px; right:24px; z-index:1000;
+background:var(–text); color:#fff;
+padding:13px 20px; border-radius:var(–radius);
+font-size:13.5px; font-weight:600;
+box-shadow:var(–shadow-lg);
+transform:translateX(130%);
+transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+display:flex; align-items:center; gap:10px;
+max-width:360px;
+}
+.toast.show { transform:translateX(0); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width:5px; height:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(–border); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(–dim); }
+
+/* ── DIVIDER ── */
+.divider { height:1px; background:var(–border2); margin:18px 0; }
+
+/* ── SECTION HEADER ── */
+.sec-hdr {
+display:flex; align-items:center; justify-content:space-between;
+margin-bottom:16px;
+}
+.sec-title {
+font-size:13.5px; font-weight:700; color:var(–text);
+display:flex; align-items:center; gap:8px;
+}
+.sec-title::before {
+content:’’; display:inline-block; width:3px; height:16px;
+background:var(–accent); border-radius:2px; flex-shrink:0;
+}
+
+/* bar chart inline */
+.mini-bar { height:5px; background:var(–border2); border-radius:3px; overflow:hidden; margin-top:6px; }
+.mini-bar-fill { height:100%; border-radius:3px; }
+</style>
+
+</head>
+<body>
+
+<div class="toast" id="toast">
+  <span style="font-size:16px">✓</span>
+  <span id="toastMsg">Action completed</span>
+</div>
+
+<div class="shell">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">🏆</div>
+    <div class="brand-words">
+      <div class="brand-name">Dream Dubai</div>
+      <div class="brand-sub">Control Panel</div>
+    </div>
+  </div>
+
+  <div class="nav-label">Overview</div>
+  <button class="nav-item active" onclick="go('dashboard',this)">
+    <span class="nav-icon">⚡</span> Dashboard
+  </button>
+
+  <div class="nav-label">Draw Management</div>
+  <button class="nav-item" onclick="go('newdraw',this)">
+    <span class="nav-icon">🎟️</span> Create New Draw
+  </button>
+  <button class="nav-item" onclick="go('category',this)">
+    <span class="nav-icon">🗂️</span> Draw Categories
+  </button>
+  <button class="nav-item" onclick="go('announce',this)">
+    <span class="nav-icon">📣</span> Announcements
+    <span class="nav-badge green">NEW</span>
+  </button>
+  <button class="nav-item" onclick="go('winner',this)">
+    <span class="nav-icon">🎯</span> Winner Selector
+    <span class="nav-badge">LIVE</span>
+  </button>
+
+  <div class="nav-label">Finance</div>
+  <button class="nav-item" onclick="go('payment',this)">
+    <span class="nav-icon">💳</span> Payment Details
+  </button>
+  <button class="nav-item" onclick="go('wallet',this)">
+    <span class="nav-icon">👛</span> Wallet
+  </button>
+
+  <div class="nav-label">Users</div>
+  <button class="nav-item" onclick="go('users',this)">
+    <span class="nav-icon">👤</span> Login Users
+  </button>
+
+  <div class="sidebar-foot">
+    <div class="admin-card">
+      <div class="admin-av">SA</div>
+      <div>
+        <div class="admin-name">Super Admin</div>
+        <div class="admin-role">Administrator</div>
+      </div>
+      <div class="online-dot"></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════ MAIN ═══════ -->
+
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="page-crumb" id="pageCrumb">Dream Dubai › Overview</div>
+    </div>
+    <div class="topbar-right">
+      <button class="tb-btn" onclick="notify('Refreshed!')">↻ Refresh</button>
+      <button class="tb-btn" onclick="go('announce',document.querySelectorAll('.nav-item')[3])">📣 Announce</button>
+      <button class="tb-btn primary" onclick="go('newdraw',document.querySelectorAll('.nav-item')[1])">+ New Draw</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+```
+<!-- ═════════════════════════════════════
+     DASHBOARD
+══════════════════════════════════════ -->
+<div class="panel active" id="panel-dashboard">
+
+  <div class="stats-grid">
+    <div class="stat-card" style="animation:fadeIn 0.4s 0.05s both">
+      <div class="stat-top">
+        <div class="stat-icon-wrap" style="background:var(--accent-l)">🎟️</div>
+        <div class="stat-trend up">↑ 12%</div>
+      </div>
+      <div class="stat-label">Total Draws</div>
+      <div class="stat-value">248</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="--w:72%; background:var(--accent)"></div></div>
+    </div>
+    <div class="stat-card" style="animation:fadeIn 0.4s 0.1s both">
+      <div class="stat-top">
+        <div class="stat-icon-wrap" style="background:var(--pink-l)">👥</div>
+        <div class="stat-trend up">↑ 8.4%</div>
+      </div>
+      <div class="stat-label">Active Users</div>
+      <div class="stat-value">12,480</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="--w:85%; background:var(--pink)"></div></div>
+    </div>
+    <div class="stat-card" style="animation:fadeIn 0.4s 0.15s both">
+      <div class="stat-top">
+        <div class="stat-icon-wrap" style="background:var(--gold-l)">💰</div>
+        <div class="stat-trend up">↑ 22%</div>
+      </div>
+      <div class="stat-label">Total Revenue</div>
+      <div class="stat-value">₹48.2M</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="--w:60%; background:var(--gold)"></div></div>
+    </div>
+    <div class="stat-card" style="animation:fadeIn 0.4s 0.2s both">
+      <div class="stat-top">
+        <div class="stat-icon-wrap" style="background:var(--green-l)">🏆</div>
+        <div class="stat-trend up">↑ 99.9%</div>
+      </div>
+      <div class="stat-label">Winners Paid</div>
+      <div class="stat-value">1,024</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="--w:99%; background:var(--green)"></div></div>
+    </div>
+  </div>
+
+  <div class="grid-65" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">📋</div> Recent Draws</div>
+        <span class="card-action" onclick="go('newdraw',document.querySelectorAll('.nav-item')[1])">View all →</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Campaign</th><th>Category</th><th>Prize</th><th>Tickets</th><th>Status</th><th>Draw Date</th></tr></thead>
+          <tbody>
+            <tr><td class="td-bold">DC-00648</td><td>💰 Cash</td><td class="td-mono">₿10M</td><td class="td-mono">12,480</td><td><span class="badge badge-green"><span class="badge-dot"></span>Live</span></td><td class="td-mono">10 May 2026</td></tr>
+            <tr><td class="td-bold">DC-00647</td><td>🚗 Car</td><td class="td-mono">₹5Cr</td><td class="td-mono">8,320</td><td><span class="badge badge-yellow"><span class="badge-dot"></span>Pending</span></td><td class="td-mono">08 May 2026</td></tr>
+            <tr><td class="td-bold">DC-00646</td><td>💰 Cash</td><td class="td-mono">₿10M</td><td class="td-mono">24,100</td><td><span class="badge badge-blue"><span class="badge-dot"></span>Drawn</span></td><td class="td-mono">30 Apr 2026</td></tr>
+            <tr><td class="td-bold">DC-00645</td><td>🏠 Property</td><td class="td-mono">₹2Cr</td><td class="td-mono">15,640</td><td><span class="badge badge-blue"><span class="badge-dot"></span>Drawn</span></td><td class="td-mono">22 Apr 2026</td></tr>
+            <tr><td class="td-bold">DC-00644</td><td>🚗 Car</td><td class="td-mono">BMW M4</td><td class="td-mono">9,800</td><td><span class="badge badge-red"><span class="badge-dot"></span>Closed</span></td><td class="td-mono">15 Apr 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title"><div class="card-title-icon" style="background:var(--gold-l)">⚙️</div> Quick Settings</div>
+      </div>
+      <div class="toggle-row"><div class="toggle-info"><div class="t-name">Auto Winner Selection</div><div class="t-desc">Pick winner automatically at draw time</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="t-name">Email Notifications</div><div class="t-desc">Notify winners instantly via email</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="t-name">Public Draw Feed</div><div class="t-desc">Show live draws on homepage</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="t-name">Wallet Top-up Alerts</div><div class="t-desc">Alert admin on large top-ups</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+      <div class="toggle-row"><div class="toggle-info"><div class="t-name">Maintenance Mode</div><div class="t-desc">Block all user purchases</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--green-l)">💳</div> Payment Methods</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>Card Payments</span><span style="font-weight:700">62%</span></div><div class="mini-bar"><div class="mini-bar-fill" style="width:62%;background:var(--accent)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>Wallet</span><span style="font-weight:700">24%</span></div><div class="mini-bar"><div class="mini-bar-fill" style="width:24%;background:var(--pink)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>Apple Pay</span><span style="font-weight:700">9%</span></div><div class="mini-bar"><div class="mini-bar-fill" style="width:9%;background:var(--muted)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span>Crypto</span><span style="font-weight:700">5%</span></div><div class="mini-bar"><div class="mini-bar-fill" style="width:5%;background:var(--gold)"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--pink-l)">📣</div> Latest Announcements</div><span class="card-action" onclick="go('announce',document.querySelectorAll('.nav-item')[3])">Manage →</span></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="padding:10px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border2)">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span class="badge badge-green" style="font-size:10px">Draw</span><span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">10 May 2026</span></div>
+          <div style="font-size:13px;font-weight:700">DC-00648 Draw Date Confirmed</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">₿10M Cash prize draw at 8:00 PM</div>
+        </div>
+        <div style="padding:10px;background:var(--surface);border-radius:var(--radius-sm);border:1px solid var(--border2)">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span class="badge badge-amber" style="font-size:10px">Launch</span><span style="font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace">01 Jun 2026</span></div>
+          <div style="font-size:13px;font-weight:700">New Crypto Draw DC-00649</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px">₿10M Bitcoin prize launching soon</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">📊</div> Category Revenue</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">💰</span><div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:3px"><span>Cash</span><span style="font-weight:700;font-family:'JetBrains Mono',monospace">₹28.4M</span></div><div class="mini-bar"><div class="mini-bar-fill" style="width:85%;background:var(--accent)"></div></div></div></div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🚗</span><div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:3px"><span>Cars</span><span style="font-weight:700;font-family:'JetBrains Mono',monospace">₹12.1M</span></div><div class="mini-bar"><div class="mini-bar-fill" style="width:48%;background:var(--pink)"></div></div></div></div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">🏠</span><div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:3px"><span>Property</span><span style="font-weight:700;font-family:'JetBrains Mono',monospace">₹6.8M</span></div><div class="mini-bar"><div class="mini-bar-fill" style="width:28%;background:var(--gold)"></div></div></div></div>
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:16px">₿</span><div style="flex:1"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:3px"><span>Crypto</span><span style="font-weight:700;font-family:'JetBrains Mono',monospace">₹0.9M</span></div><div class="mini-bar"><div class="mini-bar-fill" style="width:8%;background:var(--amber)"></div></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════
+     CREATE NEW DRAW
+══════════════════════════════════════ -->
+<div class="panel" id="panel-newdraw">
+  <div style="display:grid;grid-template-columns:1.3fr 0.7fr;gap:18px;align-items:start">
+
+    <!-- LEFT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:16px">
+
+      <!-- Category -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">🗂️</div> Draw Category</div></div>
+        <div class="cat-grid" id="catPicker">
+          <div class="cat-pill selected" onclick="pickCat(this,'💰','Cash Prize')"><div class="cat-emoji">💰</div><div class="cat-name">Cash</div><div class="cat-count">142 draws</div></div>
+          <div class="cat-pill" onclick="pickCat(this,'🚗','Luxury Car')"><div class="cat-emoji">🚗</div><div class="cat-name">Car</div><div class="cat-count">38 draws</div></div>
+          <div class="cat-pill" onclick="pickCat(this,'🏠','Real Estate')"><div class="cat-emoji">🏠</div><div class="cat-name">Property</div><div class="cat-count">24 draws</div></div>
+          <div class="cat-pill" onclick="pickCat(this,'₿','Crypto')"><div class="cat-emoji">₿</div><div class="cat-name">Crypto</div><div class="cat-count">19 draws</div></div>
+          <div class="cat-pill" onclick="pickCat(this,'✈️','Travel')"><div class="cat-emoji">✈️</div><div class="cat-name">Travel</div><div class="cat-count">15 draws</div></div>
+          <div class="cat-pill" onclick="pickCat(this,'📱','Electronics')"><div class="cat-emoji">📱</div><div class="cat-name">Tech</div><div class="cat-count">10 draws</div></div>
+          <div class="cat-pill" onclick="pickCat(this,'⌚','Watches')"><div class="cat-emoji">⌚</div><div class="cat-name">Watches</div><div class="cat-count">6 draws</div></div>
+          <div class="cat-pill" onclick="pickCat(this,'💎','Jewellery')"><div class="cat-emoji">💎</div><div class="cat-name">Jewels</div><div class="cat-count">4 draws</div></div>
+        </div>
+      </div>
+
+      <!-- Draw Info -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--green-l)">📝</div> Draw Information</div></div>
+        <div class="form-row">
+          <div class="form-group"><label>Campaign ID</label><input type="text" id="nd-campaign" value="DC-00649" oninput="updatePv()"></div>
+          <div class="form-group"><label>Currency</label>
+            <select id="nd-currency" onchange="document.getElementById('nd-sym').textContent=this.value;updatePv()">
+              <option value="₹">INR — Indian Rupee</option>
+              <option value="$">USD — US Dollar</option>
+              <option value="₿">BTC — Bitcoin</option>
+              <option value="د.إ">AED — UAE Dirham</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Prize Amount</label>
+            <div class="input-wrap"><span class="prefix" id="nd-sym">₹</span><input type="number" id="nd-amount" placeholder="10,000,000" oninput="updatePv()"></div>
+          </div>
+          <div class="form-group"><label>Ticket Price (₹)</label>
+            <div class="input-wrap"><span class="prefix">₹</span><input type="number" id="nd-price" placeholder="230" oninput="updatePv();refreshTicketUI()"></div>
+          </div>
+        </div>
+        <div class="form-row cols1">
+          <div class="form-group"><label>Draw Description</label>
+            <textarea id="nd-desc" placeholder="Win ₿10,000,000 — The Biggest Prize Ever..." oninput="updatePv()"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Draw Time -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--amber-l)">⏰</div> Draw Time & Countdown</div></div>
+        <div class="form-row" style="margin-bottom:16px">
+          <div class="form-group"><label>Draw Date</label><input type="date" id="nd-date" value="2026-06-01" oninput="startCd();updatePv()"></div>
+          <div class="form-group"><label>Draw Time</label><input type="time" id="nd-time" value="20:00" oninput="startCd()"></div>
+        </div>
+        <div class="countdown-strip">
+          <div class="cd-block"><span class="cd-val" id="cd-d">--</span><div class="cd-lbl">Days</div></div>
+          <div class="cd-colon">:</div>
+          <div class="cd-block"><span class="cd-val" id="cd-h">--</span><div class="cd-lbl">Hours</div></div>
+          <div class="cd-colon">:</div>
+          <div class="cd-block"><span class="cd-val" id="cd-m">--</span><div class="cd-lbl">Min</div></div>
+          <div class="cd-colon">:</div>
+          <div class="cd-block"><span class="cd-val" id="cd-s">--</span><div class="cd-lbl">Sec</div></div>
+        </div>
+      </div>
+
+      <!-- Ticket Counter -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--pink-l)">🎫</div> Ticket Counter & Limits</div></div>
+        <div class="toggle-row" style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border2)">
+          <div class="toggle-info"><div class="t-name">♾️ No Ticket Limit</div><div class="t-desc">Allow unlimited ticket sales for this draw</div></div>
+          <div class="tog on" id="noLimitTog" onclick="toggleNoLimit()"></div>
+        </div>
+        <div id="maxWrap" style="display:none;margin-bottom:14px">
+          <div class="form-group"><label>Maximum Tickets</label><input type="number" id="nd-max" placeholder="100,000" oninput="refreshTicketUI()"></div>
+        </div>
+        <div class="counter-display">
+          <div class="counter-label">Tickets Sold</div>
+          <div class="counter-num" id="soldNum">0</div>
+          <div class="counter-meta">
+            <div class="counter-meta-item"><div class="counter-meta-label">Limit</div><div class="counter-meta-val" id="limitVal">♾️ Unlimited</div></div>
+            <div class="counter-meta-item"><div class="counter-meta-label">Revenue</div><div class="counter-meta-val" id="revenueVal">₹ 0</div></div>
+            <div class="counter-meta-item"><div class="counter-meta-label">Fill Rate</div><div class="counter-meta-val" id="fillPct">—</div></div>
+          </div>
+          <div class="counter-bar"><div class="counter-bar-fill" id="cBar" style="width:0%"></div></div>
+          <div class="sim-btns">
+            <button class="sim-btn" onclick="simT(10)">+10</button>
+            <button class="sim-btn" onclick="simT(100)">+100</button>
+            <button class="sim-btn" onclick="simT(500)">+500</button>
+            <button class="sim-btn" onclick="simT(1000)">+1K</button>
+            <button class="sim-btn reset-btn" onclick="resetT()">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="notify('Draft saved!')">💾 Save Draft</button>
+        <button class="btn btn-primary btn-lg" style="flex:2" onclick="notify('🎟️ Draw launched successfully!')">🚀 Launch Draw</button>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div style="display:flex;flex-direction:column;gap:16px;position:sticky;top:80px">
+
+      <!-- Live Preview -->
+      <div class="card" style="border:1.5px solid var(--accent-l)">
+        <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">👁️</div> Live Preview</div></div>
+        <div style="background:var(--text);border-radius:var(--radius);padding:20px;color:#fff;position:relative;overflow:hidden">
+          <div style="position:absolute;right:-20px;bottom:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.05)"></div>
+          <div style="font-size:10px;opacity:0.5;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Campaign</div>
+          <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:10px" id="pv-id">DC-00649</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">
+            <span class="badge badge-green"><span class="badge-dot"></span>Active</span>
+            <span id="pv-cat" style="background:rgba(255,255,255,0.12);color:#fff;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600">💰 Cash Prize</span>
+            <span id="pv-date-badge" style="background:rgba(255,255,255,0.12);color:#fff;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:600">Jun 01</span>
+          </div>
+          <div style="font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:6px" id="pv-prize">Prize TBD</div>
+          <div style="font-size:12px;opacity:0.55;line-height:1.4" id="pv-desc">Description will appear here</div>
+          <div style="display:flex;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.1)">
+            <div><div style="font-size:10px;opacity:0.5">Ticket Price</div><div style="font-size:16px;font-weight:800;color:#f5c842" id="pv-price">₹ —</div></div>
+            <div style="text-align:right"><div style="font-size:10px;opacity:0.5">Limit</div><div style="font-size:16px;font-weight:800;color:#a78bfa" id="pv-limit">♾️ Unlimited</div></div>
+          </div>
+        </div>
+        <!-- Mini countdown in preview -->
+        <div style="display:flex;justify-content:center;gap:14px;padding:14px 0 4px;border-top:1px solid var(--border2);margin-top:14px">
+          <div style="text-align:center"><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--accent)" id="pv-d">--</div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">d</div></div>
+          <div style="font-size:20px;color:var(--dim);padding-top:2px">:</div>
+          <div style="text-align:center"><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--accent)" id="pv-h">--</div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">h</div></div>
+          <div style="font-size:20px;color:var(--dim);padding-top:2px">:</div>
+          <div style="text-align:center"><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--accent)" id="pv-m">--</div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">m</div></div>
+          <div style="font-size:20px;color:var(--dim);padding-top:2px">:</div>
+          <div style="text-align:center"><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:var(--pink)" id="pv-s">--</div><div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">s</div></div>
+        </div>
+      </div>
+
+      <!-- Bundles -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--gold-l)">📦</div> Ticket Bundles</div></div>
+        <div class="form-row" style="margin-bottom:10px">
+          <div class="form-group"><label>Bundle Name</label><input type="text" id="b-name" placeholder="Starter Pack"></div>
+          <div class="form-group"><label>Tickets</label><input type="number" id="b-count" placeholder="20"></div>
+        </div>
+        <div class="form-row" style="margin-bottom:12px">
+          <div class="form-group"><label>Price (₹)</label><div class="input-wrap"><span class="prefix">₹</span><input type="number" id="b-price" placeholder="4600"></div></div>
+          <div class="form-group"><label>Discount %</label><input type="number" id="b-disc" placeholder="20"></div>
+        </div>
+        <button class="btn btn-outline btn-full btn-sm" onclick="addBundle()">+ Add Bundle</button>
+        <div id="bundleList" style="display:flex;flex-direction:column;gap:7px;margin-top:10px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════
+     DRAW CATEGORIES
+══════════════════════════════════════ -->
+<div class="panel" id="panel-category">
+  <div class="grid-56">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card">
+        <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">🗂️</div> All Categories</div><button class="btn btn-primary btn-sm" onclick="document.getElementById('catForm').scrollIntoView({behavior:'smooth'})">+ Add New</button></div>
+        <div class="cat-grid" style="margin-bottom:20px">
+          <div class="cat-pill selected" onclick="selectCatView(this)"><div class="cat-emoji">💰</div><div class="cat-name">Cash Prize</div><div class="cat-count">142 draws</div></div>
+          <div class="cat-pill" onclick="selectCatView(this)"><div class="cat-emoji">🚗</div><div class="cat-name">Luxury Car</div><div class="cat-count">38 draws</div></div>
+          <div class="cat-pill" onclick="selectCatView(this)"><div class="cat-emoji">🏠</div><div class="cat-name">Real Estate</div><div class="cat-count">24 draws</div></div>
+          <div class="cat-pill" onclick="selectCatView(this)"><div class="cat-emoji">₿</div><div class="cat-name">Crypto</div><div class="cat-count">19 draws</div></div>
+          <div class="cat-pill" onclick="selectCatView(this)"><div class="cat-emoji">✈️</div><div class="cat-name">Travel</div><div class="cat-count">15 draws</div></div>
+          <div class="cat-pill" onclick="selectCatView(this)"><div class="cat-emoji">📱</div><div class="cat-name">Electronics</div><div class="cat-count">10 draws</div></div>
+          <div class="cat-pill" onclick="selectCatView(this)"><div class="cat-emoji">⌚</div><div class="cat-name">Watches</div><div class="cat-count">6 draws</div></div>
+          <div class="cat-pill" onclick="selectCatView(this)"><div class="cat-emoji">💎</div><div class="cat-name">Jewellery</div><div class="cat-count">4 draws</div></div>
+        </div>
+        <div class="sec-hdr"><div class="sec-title">Category Performance</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Category</th><th>Draws</th><th>Revenue</th><th>Avg Tickets</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>💰 Cash</td><td>142</td><td class="td-mono" style="font-weight:700;color:var(--green)">₹28.4M</td><td class="td-mono">18,420</td><td><span class="badge badge-green">Active</span></td></tr>
+              <tr><td>🚗 Cars</td><td>38</td><td class="td-mono" style="font-weight:700;color:var(--green)">₹12.1M</td><td class="td-mono">9,300</td><td><span class="badge badge-green">Active</span></td></tr>
+              <tr><td>🏠 Property</td><td>24</td><td class="td-mono" style="font-weight:700;color:var(--green)">₹6.8M</td><td class="td-mono">12,100</td><td><span class="badge badge-yellow">Limited</span></td></tr>
+              <tr><td>₿ Crypto</td><td>19</td><td class="td-mono" style="font-weight:700;color:var(--green)">₹0.9M</td><td class="td-mono">4,800</td><td><span class="badge badge-green">Active</span></td></tr>
+              <tr><td>✈️ Travel</td><td>15</td><td class="td-mono" style="font-weight:700;color:var(--green)">₹0.4M</td><td class="td-mono">2,200</td><td><span class="badge badge-green">Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card" id="catForm">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--green-l)">✏️</div> Add / Edit Category</div></div>
+      <div class="form-group" style="margin-bottom:12px"><label>Category Name</label><input type="text" placeholder="e.g. Luxury Watches"></div>
+      <div class="form-group" style="margin-bottom:12px"><label>Emoji Icon</label><input type="text" placeholder="⌚" maxlength="2"></div>
+      <div class="form-group" style="margin-bottom:12px"><label>Description</label><textarea placeholder="Short description of this prize category..."></textarea></div>
+      <div class="form-group" style="margin-bottom:12px"><label>Default Ticket Price (₹)</label><div class="input-wrap"><span class="prefix">₹</span><input type="number" placeholder="230"></div></div>
+      <div class="form-row" style="margin-bottom:16px">
+        <div class="form-group"><label>Status</label><select><option>Active</option><option>Inactive</option><option>Coming Soon</option></select></div>
+        <div class="form-group"><label>Display Order</label><input type="number" placeholder="1"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary">Cancel</button>
+        <button class="btn btn-primary" style="flex:1" onclick="notify('Category saved successfully!')">Save Category</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════
+     ANNOUNCEMENTS (NEW)
+══════════════════════════════════════ -->
+<div class="panel" id="panel-announce">
+  <div class="grid-56">
+    <div style="display:flex;flex-direction:column;gap:16px">
+
+      <!-- Current announcements -->
+      <div class="announce-card">
+        <div class="announce-accent" style="background:linear-gradient(to bottom,var(--accent),var(--pink))"></div>
+        <div class="card-hdr" style="padding-left:12px"><div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">📣</div> Scheduled Announcements</div><button class="btn btn-sm btn-primary" onclick="document.getElementById('annForm').scrollIntoView({behavior:'smooth'})">+ New</button></div>
+        <div id="annList">
+          <div class="announce-item">
+            <div class="announce-date-block"><div class="ann-month">May</div><div class="ann-day">10</div><div class="ann-time">8:00 PM</div></div>
+            <div class="announce-body">
+              <div class="ann-title">DC-00648 Draw Date — ₿10M Cash Prize</div>
+              <div class="ann-desc">The biggest prize draw in Dream Dubai history. ₿10,000,000 Bitcoin Cash will be drawn live.</div>
+              <div class="ann-tags"><span class="badge badge-green">Draw Day</span><span class="badge badge-blue">DC-00648</span><span class="badge badge-pink">₿ Crypto</span></div>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="this.closest('.announce-item').remove();notify('Announcement removed')">×</button>
+          </div>
+          <div class="announce-item">
+            <div class="announce-date-block"><div class="ann-month">Jun</div><div class="ann-day">01</div><div class="ann-time">12:00 PM</div></div>
+            <div class="announce-body">
+              <div class="ann-title">New Draw Launch — DC-00649</div>
+              <div class="ann-desc">Exciting new ₿10M crypto draw launching with special early-bird bundle discounts.</div>
+              <div class="ann-tags"><span class="badge badge-amber">Launch</span><span class="badge badge-blue">DC-00649</span></div>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="this.closest('.announce-item').remove();notify('Announcement removed')">×</button>
+          </div>
+          <div class="announce-item">
+            <div class="announce-date-block"><div class="ann-month">May</div><div class="ann-day">15</div><div class="ann-time">6:00 PM</div></div>
+            <div class="announce-body">
+              <div class="ann-title">Wallet Top-up Bonus Weekend</div>
+              <div class="ann-desc">Top up your wallet this weekend and get 15% bonus Modesh Credits on all deposits.</div>
+              <div class="ann-tags"><span class="badge badge-yellow">Promo</span><span class="badge badge-green">Wallet</span></div>
+            </div>
+            <button class="btn btn-sm btn-danger" onclick="this.closest('.announce-item').remove();notify('Announcement removed')">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Announcement calendar view -->
+      <div class="card">
+        <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--gold-l)">📅</div> Upcoming Draw Dates</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Time</th><th>Campaign</th><th>Category</th><th>Prize</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td class="td-mono" style="font-weight:700">10 May 2026</td><td class="td-mono">8:00 PM</td><td class="td-bold">DC-00648</td><td>💰 Cash</td><td class="td-mono">₿10M</td><td><span class="badge badge-green"><span class="badge-dot"></span>Confirmed</span></td></tr>
+              <tr><td class="td-mono" style="font-weight:700">15 May 2026</td><td class="td-mono">6:00 PM</td><td class="td-bold">DC-00647</td><td>🚗 Car</td><td class="td-mono">₹5Cr</td><td><span class="badge badge-yellow"><span class="badge-dot"></span>Pending</span></td></tr>
+              <tr><td class="td-mono" style="font-weight:700">01 Jun 2026</td><td class="td-mono">12:00 PM</td><td class="td-bold">DC-00649</td><td>₿ Crypto</td><td class="td-mono">₿10M</td><td><span class="badge badge-amber"><span class="badge-dot"></span>Scheduled</span></td></tr>
+              <tr><td class="td-mono" style="font-weight:700">15 Jun 2026</td><td class="td-mono">9:00 PM</td><td class="td-bold">DC-00650</td><td>🏠 Property</td><td class="td-mono">₹2Cr</td><td><span class="badge badge-pink"><span class="badge-dot"></span>Draft</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Announcement Form -->
+    <div class="card" id="annForm" style="position:sticky;top:80px">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--pink-l)">✏️</div> Create Announcement</div></div>
+
+      <div class="form-section">
+        <div class="form-section-title">📋 Announcement Details</div>
+        <div class="form-group" style="margin-bottom:12px"><label>Title</label><input type="text" id="ann-title" placeholder="e.g. DC-00648 Draw Date Confirmed"></div>
+        <div class="form-group" style="margin-bottom:12px"><label>Description</label><textarea id="ann-desc" placeholder="Full announcement text visible to users..."></textarea></div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label>Type / Tag</label>
+          <select id="ann-type">
+            <option value="Draw Day">🎯 Draw Day</option>
+            <option value="Launch">🚀 New Launch</option>
+            <option value="Promo">🎁 Promotion</option>
+            <option value="Maintenance">⚙️ Maintenance</option>
+            <option value="Winner">🏆 Winner Announcement</option>
+            <option value="Update">📢 General Update</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">🔗 Linked Draw (optional)</div>
+        <div class="form-group" style="margin-bottom:12px"><label>Campaign ID</label>
+          <select id="ann-campaign">
+            <option value="">— None —</option>
+            <option value="DC-00648">DC-00648 (Live)</option>
+            <option value="DC-00649">DC-00649 (Scheduled)</option>
+            <option value="DC-00647">DC-00647 (Pending)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">📅 Date & Visibility</div>
+        <div class="form-row" style="margin-bottom:12px">
+          <div class="form-group"><label>Announcement Date</label><input type="date" id="ann-date" value="2026-05-10"></div>
+          <div class="form-group"><label>Time</label><input type="time" id="ann-time" value="20:00"></div>
+        </div>
+        <div class="toggle-row" style="border:none;padding:8px 0 4px">
+          <div class="toggle-info"><div class="t-name">Push Notification</div><div class="t-desc">Send mobile push to all users</div></div>
+          <div class="tog on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row" style="border:none;padding:4px 0 8px">
+          <div class="toggle-info"><div class="t-name">Email Broadcast</div><div class="t-desc">Send to all registered users</div></div>
+          <div class="tog" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary">Clear</button>
+        <button class="btn btn-primary" style="flex:1" onclick="addAnn()">📣 Publish Announcement</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════
+     PAYMENT DETAILS
+══════════════════════════════════════ -->
+<div class="panel" id="panel-payment">
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+    <div class="stat-card">
+      <div class="stat-top"><div class="stat-icon-wrap" style="background:var(--green-l)">💳</div><div class="stat-trend up">↑ 22%</div></div>
+      <div class="stat-label">Total Collected</div><div class="stat-value">₹48.2M</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="--w:80%;background:var(--green)"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top"><div class="stat-icon-wrap" style="background:var(--gold-l)">⏳</div><div class="stat-trend dn">8 pending</div></div>
+      <div class="stat-label">Pending Payouts</div><div class="stat-value">₹1.2M</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="--w:20%;background:var(--gold)"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top"><div class="stat-icon-wrap" style="background:var(--red-l)">🔄</div><div class="stat-trend dn">↑ 3 new</div></div>
+      <div class="stat-label">Refunds Issued</div><div class="stat-value">₹84K</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="--w:5%;background:var(--red)"></div></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">📋</div> Recent Transactions</div></div>
+      <div class="txn-item"><div class="txn-ico" style="background:var(--green-l)">💰</div><div><div class="txn-name">Ticket Purchase — DC-00648</div><div class="txn-date">May 03, 2026 · 10:42 AM</div></div><div class="txn-amt txn-cr">+₹4,600</div></div>
+      <div class="txn-item"><div class="txn-ico" style="background:var(--red-l)">🏆</div><div><div class="txn-name">Winner Payout — DC-00646</div><div class="txn-date">Apr 30, 2026 · 8:00 PM</div></div><div class="txn-amt txn-dr">-₹10,00,000</div></div>
+      <div class="txn-item"><div class="txn-ico" style="background:var(--green-l)">👛</div><div><div class="txn-name">Wallet Top-up — User #4821</div><div class="txn-date">Apr 29, 2026 · 2:15 PM</div></div><div class="txn-amt txn-cr">+₹23,000</div></div>
+      <div class="txn-item"><div class="txn-ico" style="background:var(--amber-l)">🔄</div><div><div class="txn-name">Refund — DC-00645</div><div class="txn-date">Apr 22, 2026 · 11:30 AM</div></div><div class="txn-amt txn-dr">-₹1,150</div></div>
+      <div class="txn-item"><div class="txn-ico" style="background:var(--green-l)">💰</div><div><div class="txn-name">Ticket Purchase — DC-00648</div><div class="txn-date">Apr 21, 2026 · 6:10 PM</div></div><div class="txn-amt txn-cr">+₹9,200</div></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--gold-l)">📊</div> Payment Breakdown</div></div>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:22px">
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>💳 Card Payments</span><span style="font-weight:700">62%</span></div><div class="mini-bar" style="height:7px"><div class="mini-bar-fill" style="width:62%;background:var(--accent)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>👛 Wallet</span><span style="font-weight:700">24%</span></div><div class="mini-bar" style="height:7px"><div class="mini-bar-fill" style="width:24%;background:var(--pink)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>🍎 Apple Pay</span><span style="font-weight:700">9%</span></div><div class="mini-bar" style="height:7px"><div class="mini-bar-fill" style="width:9%;background:var(--muted)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>₿ Crypto</span><span style="font-weight:700">5%</span></div><div class="mini-bar" style="height:7px"><div class="mini-bar-fill" style="width:5%;background:var(--gold)"></div></div></div>
+      </div>
+      <div class="divider"></div>
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px">Manual Refund</div>
+      <div class="form-group" style="margin-bottom:10px"><label>Transaction ID</label><input type="text" placeholder="TXN-202604-00xxx"></div>
+      <div class="form-group" style="margin-bottom:12px"><label>Amount (₹)</label><div class="input-wrap"><span class="prefix">₹</span><input type="number" placeholder="0.00"></div></div>
+      <button class="btn btn-danger btn-full" onclick="notify('Refund initiated!')">Issue Refund</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════
+     WALLET
+══════════════════════════════════════ -->
+<div class="panel" id="panel-wallet">
+  <div class="wallet-hero">
+    <div class="wallet-lbl">Platform Wallet Balance</div>
+    <div class="wallet-amt"><span class="wallet-cur">₹</span> 4,82,14,000.00</div>
+    <div class="wallet-stats">
+      <div class="ws-item"><div class="ws-lbl">Inflow Today</div><div class="ws-val">₹2.8L</div></div>
+      <div class="ws-item"><div class="ws-lbl">Outflow Today</div><div class="ws-val">₹45K</div></div>
+      <div class="ws-item"><div class="ws-lbl">Pending</div><div class="ws-val">₹1.2M</div></div>
+      <div class="ws-item"><div class="ws-lbl">This Month</div><div class="ws-val">₹48.2M</div></div>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">👥</div> User Wallet Balances</div></div>
+      <div class="user-row"><div class="user-av" style="background:#7c3aed">MA</div><div style="flex:1"><div class="u-name">Muhammed Althaf</div><div class="u-email">m.althaf@email.com</div></div><div><div class="u-bal">₹5,750.00</div><div class="u-date">Updated today</div></div></div>
+      <div class="user-row"><div class="user-av" style="background:#d4245a">RK</div><div style="flex:1"><div class="u-name">Rahul Kumar</div><div class="u-email">rahul.k@email.com</div></div><div><div class="u-bal">₹12,300.00</div><div class="u-date">2h ago</div></div></div>
+      <div class="user-row"><div class="user-av" style="background:#c4860a">PS</div><div style="flex:1"><div class="u-name">Priya Sharma</div><div class="u-email">priya.s@email.com</div></div><div><div class="u-bal">₹3,200.00</div><div class="u-date">5h ago</div></div></div>
+      <div class="user-row"><div class="user-av" style="background:#1a7a4a">AJ</div><div style="flex:1"><div class="u-name">Arjun Joshi</div><div class="u-email">arjun.j@email.com</div></div><div><div class="u-bal" style="color:var(--muted)">₹0.00</div><div class="u-date">Yesterday</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--green-l)">⚡</div> Manual Wallet Action</div></div>
+      <div class="form-group" style="margin-bottom:12px"><label>User ID or Email</label><input type="text" placeholder="user@email.com or #ID"></div>
+      <div class="form-group" style="margin-bottom:12px"><label>Action</label><select><option>➕ Top-up Wallet</option><option>➖ Deduct from Wallet</option></select></div>
+      <div class="form-group" style="margin-bottom:12px"><label>Amount (₹)</label><div class="input-wrap"><span class="prefix">₹</span><input type="number" placeholder="0.00"></div></div>
+      <div class="form-group" style="margin-bottom:16px"><label>Reason / Note</label><input type="text" placeholder="Promotional credit, correction, etc."></div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="notify('Wallet updated successfully!')">Apply Wallet Change</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════
+     LOGIN USERS
+══════════════════════════════════════ -->
+<div class="panel" id="panel-users">
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+    <div class="stat-card"><div class="stat-top"><div class="stat-icon-wrap" style="background:var(--accent-l)">👥</div><div class="stat-trend up">↑ 340</div></div><div class="stat-label">Total Users</div><div class="stat-value">12,480</div><div class="stat-bar"><div class="stat-bar-fill" style="--w:85%;background:var(--accent)"></div></div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-icon-wrap" style="background:var(--green-l)">🟢</div><div class="stat-trend up">Online</div></div><div class="stat-label">Active Now</div><div class="stat-value">248</div><div class="stat-bar"><div class="stat-bar-fill" style="--w:35%;background:var(--green)"></div></div></div>
+    <div class="stat-card"><div class="stat-top"><div class="stat-icon-wrap" style="background:var(--red-l)">🚫</div><div class="stat-trend dn">↑ 2 new</div></div><div class="stat-label">Banned</div><div class="stat-value">12</div><div class="stat-bar"><div class="stat-bar-fill" style="--w:5%;background:var(--red)"></div></div></div>
+  </div>
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">📋</div> Registered Users</div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="search-wrap"><span class="search-ico">🔍</span><input type="text" placeholder="Search users..." style="width:200px;padding:7px 12px 7px 32px;font-size:13px"></div>
+        <button class="btn btn-secondary btn-sm" onclick="notify('Export started!')">⬇ Export CSV</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>User</th><th>Email</th><th>Tickets</th><th>Wallet Balance</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="td-mono">4821</td>
+            <td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:#7c3aed;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">MA</div><span class="td-bold">Muhammed Althaf</span></div></td>
+            <td class="td-mono">m.althaf@email.com</td>
+            <td style="font-weight:600">138</td>
+            <td class="td-mono" style="color:var(--green);font-weight:700">₹5,750</td>
+            <td class="td-mono">Oct 2025</td>
+            <td><span class="badge badge-green"><span class="badge-dot"></span>Active</span></td>
+            <td><button class="btn btn-sm btn-secondary" onclick="notify('User profile opened')">View</button></td>
+          </tr>
+          <tr>
+            <td class="td-mono">4820</td>
+            <td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:#d4245a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">RK</div><span class="td-bold">Rahul Kumar</span></div></td>
+            <td class="td-mono">rahul.k@email.com</td>
+            <td style="font-weight:600">224</td>
+            <td class="td-mono" style="color:var(--green);font-weight:700">₹12,300</td>
+            <td class="td-mono">Sep 2025</td>
+            <td><span class="badge badge-green"><span class="badge-dot"></span>Active</span></td>
+            <td><button class="btn btn-sm btn-secondary" onclick="notify('User profile opened')">View</button></td>
+          </tr>
+          <tr>
+            <td class="td-mono">4819</td>
+            <td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:#c4860a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">PS</div><span class="td-bold">Priya Sharma</span></div></td>
+            <td class="td-mono">priya.s@email.com</td>
+            <td style="font-weight:600">56</td>
+            <td class="td-mono" style="color:var(--green);font-weight:700">₹3,200</td>
+            <td class="td-mono">Aug 2025</td>
+            <td><span class="badge badge-yellow"><span class="badge-dot"></span>Idle</span></td>
+            <td><button class="btn btn-sm btn-secondary" onclick="notify('User profile opened')">View</button></td>
+          </tr>
+          <tr>
+            <td class="td-mono">4818</td>
+            <td><div style="display:flex;align-items:center;gap:9px"><div style="width:30px;height:30px;border-radius:50%;background:#c0362a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">XY</div><span class="td-bold">Unknown User</span></div></td>
+            <td class="td-mono">flagged@spam.com</td>
+            <td style="font-weight:600">0</td>
+            <td class="td-mono">₹0</td>
+            <td class="td-mono">May 2026</td>
+            <td><span class="badge badge-red"><span class="badge-dot"></span>Banned</span></td>
+            <td><button class="btn btn-sm btn-danger" onclick="notify('User unbanned')">Unban</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═════════════════════════════════════
+     WINNER SELECTOR
+══════════════════════════════════════ -->
+<div class="panel" id="panel-winner">
+  <div class="grid-65">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="drum-card">
+        <div class="drum-title">🎯 Winner Selector</div>
+        <div class="drum-sub">Choose a campaign and spin to select the lucky winner</div>
+        <div class="form-group" style="margin-bottom:18px;text-align:left">
+          <label>Select Campaign</label>
+          <select id="drawSel">
+            <option value="DC-00648">DC-00648 — ₿10M Cash (Live)</option>
+            <option value="DC-00647">DC-00647 — ₹5Cr Cash</option>
+            <option value="DC-00646">DC-00646 — ₿10M Cash</option>
+          </select>
+        </div>
+        <div class="winner-box" id="winBox">
+          <div class="spin-icon" id="spinIco">⭐</div>
+          <div class="winner-placeholder" id="winPlaceholder">Spin to select a winner</div>
+          <div id="winResult" style="display:none;text-align:center">
+            <div style="font-size:32px;margin-bottom:8px">🏆</div>
+            <div class="winner-name" id="wName"></div>
+            <div class="winner-id" id="wId"></div>
+            <div class="winner-prize" id="wPrize"></div>
+          </div>
+        </div>
+        <div class="draw-btns">
+          <button class="draw-btn-reset" onclick="resetWinner()">↺ Reset</button>
+          <button class="draw-btn-spin" id="spinBtn" onclick="doSpin()">🎲 Select Winner</button>
+        </div>
+        <div id="winActions" style="display:none">
+          <div class="btn-row">
+            <button class="btn btn-green" style="flex:1" onclick="notify('Winner notified via email!')">📧 Notify Winner</button>
+            <button class="btn btn-primary" style="flex:1" onclick="notify('Winner confirmed! Payout initiated.')">✓ Confirm & Pay</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--gold-l)">📜</div> Draw History</div></div>
+        <div class="table-wrap"><table><thead><tr><th>Draw</th><th>Winner</th><th>Prize</th><th>Drawn</th></tr></thead><tbody><tr><td>DC-00646</td><td class="td-bold">Rahul Kumar</td><td class="td-mono" style="color:var(--gold);font-weight:700">₿10M</td><td class="td-mono">Apr 30</td></tr><tr><td>DC-00645</td><td class="td-bold">Priya Sharma</td><td class="td-mono" style="color:var(--green);font-weight:700">₹2Cr</td><td class="td-mono">Apr 22</td></tr><tr><td>DC-00644</td><td class="td-bold">Ali Mirza</td><td class="td-mono">🚗 BMW</td><td class="td-mono">Apr 15</td></tr></tbody></table></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hdr"><div class="card-title"><div class="card-title-icon" style="background:var(--accent-l)">👥</div> Participants</div><span id="partCount" style="font-size:12px;color:var(--muted)">12,480 entries</span></div>
+      <div class="part-list" id="partList">
+        <div class="part-item" data-name="Muhammed Althaf" data-id="TKT-138936131" data-prize="₿10,000,000"><span class="part-num">1</span><span class="part-dot" style="background:#7c3aed"></span>Muhammed Althaf — TKT-138936131</div>
+        <div class="part-item" data-name="Rahul Kumar" data-id="TKT-138936088" data-prize="₿10,000,000"><span class="part-num">2</span><span class="part-dot" style="background:#d4245a"></span>Rahul Kumar — TKT-138936088</div>
+        <div class="part-item" data-name="Priya Sharma" data-id="TKT-138936055" data-prize="₿10,000,000"><span class="part-num">3</span><span class="part-dot" style="background:#c4860a"></span>Priya Sharma — TKT-138936055</div>
+        <div class="part-item" data-name="Arjun Joshi" data-id="TKT-138936040" data-prize="₿10,000,000"><span class="part-num">4</span><span class="part-dot" style="background:#1a7a4a"></span>Arjun Joshi — TKT-138936040</div>
+        <div class="part-item" data-name="Sara Nair" data-id="TKT-138936022" data-prize="₿10,000,000"><span class="part-num">5</span><span class="part-dot" style="background:#0891b2"></span>Sara Nair — TKT-138936022</div>
+        <div class="part-item" data-name="Vikram Patel" data-id="TKT-138936010" data-prize="₿10,000,000"><span class="part-num">6</span><span class="part-dot" style="background:#6d28d9"></span>Vikram Patel — TKT-138936010</div>
+        <div class="part-item" data-name="Zara Khan" data-id="TKT-138935998" data-prize="₿10,000,000"><span class="part-num">7</span><span class="part-dot" style="background:#be185d"></span>Zara Khan — TKT-138935998</div>
+        <div class="part-item" data-name="Dev Mehta" data-id="TKT-138935980" data-prize="₿10,000,000"><span class="part-num">8</span><span class="part-dot" style="background:#d97706"></span>Dev Mehta — TKT-138935980</div>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div><!-- /content -->
+</main>
+</div><!-- /shell -->
+
+<script>
+/* ── NAVIGATION ── */
+const meta = {
+  dashboard: ['Dashboard',      'Dream Dubai › Overview'],
+  newdraw:   ['Create New Draw','Dream Dubai › Draw Management › New Draw'],
+  category:  ['Draw Categories','Dream Dubai › Draw Management › Categories'],
+  announce:  ['Announcements',  'Dream Dubai › Draw Management › Announcements'],
+  winner:    ['Winner Selector','Dream Dubai › Draw Management › Winner Selector'],
+  payment:   ['Payment Details','Dream Dubai › Finance › Payments'],
+  wallet:    ['Wallet',         'Dream Dubai › Finance › Wallet'],
+  users:     ['Login Users',    'Dream Dubai › Users'],
+};
+function go(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  document.getElementById('pageTitle').textContent = meta[id][0];
+  document.getElementById('pageCrumb').textContent = meta[id][1];
+}
+
+/* ── TOAST ── */
+function notify(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ── CATEGORY PICKER (new draw) ── */
+let selCat = { emoji:'💰', label:'Cash Prize' };
+function pickCat(el, emoji, label) {
+  document.querySelectorAll('#catPicker .cat-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+  selCat = { emoji, label };
+  updatePv();
+}
+function selectCatView(el) {
+  document.querySelectorAll('#panel-category .cat-pill').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+/* ── LIVE PREVIEW ── */
+function updatePv() {
+  const g = id => document.getElementById(id);
+  const s = (id, v) => { const el = g(id); if(el) el.textContent = v; };
+  const campaign = g('nd-campaign')?.value || 'DC-00649';
+  const amount   = g('nd-amount')?.value;
+  const sym      = g('nd-currency')?.value || '₹';
+  const price    = g('nd-price')?.value;
+  const desc     = g('nd-desc')?.value;
+  const date     = g('nd-date')?.value;
+  const noLimit  = g('noLimitTog')?.classList.contains('on');
+  s('pv-id', campaign);
+  s('pv-cat', selCat.emoji + ' ' + selCat.label);
+  s('pv-prize', amount ? sym + ' ' + Number(amount).toLocaleString() : 'Prize TBD');
+  s('pv-price', price ? '₹' + Number(price).toLocaleString() : '₹ —');
+  s('pv-desc', desc || 'Description will appear here');
+  s('pv-limit', noLimit ? '♾️ Unlimited' : (g('nd-max')?.value || '—'));
+  if (date) {
+    const d = new Date(date);
+    s('pv-date-badge', d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'}));
+  }
+}
+
+/* ── COUNTDOWN ── */
+let cdTimer = null;
+function startCd() {
+  if (cdTimer) clearInterval(cdTimer);
+  cdTimer = setInterval(() => {
+    const d = document.getElementById('nd-date')?.value;
+    const t = document.getElementById('nd-time')?.value || '20:00';
+    if (!d) return;
+    const diff = new Date(d + 'T' + t) - new Date();
+    const pad = n => String(Math.max(0,n)).padStart(2,'0');
+    const vals = diff <= 0 ? [0,0,0,0] : [
+      Math.floor(diff/86400000),
+      Math.floor((diff%86400000)/3600000),
+      Math.floor((diff%3600000)/60000),
+      Math.floor((diff%60000)/1000)
+    ];
+    const ids = [['cd-d','pv-d'],['cd-h','pv-h'],['cd-m','pv-m'],['cd-s','pv-s']];
+    ids.forEach(([a,b], i) => {
+      [a,b].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=pad(vals[i]); });
+    });
+  }, 1000);
+}
+startCd();
+
+/* ── NO LIMIT TOGGLE ── */
+function toggleNoLimit() {
+  const tog = document.getElementById('noLimitTog');
+  tog.classList.toggle('on');
+  const on = tog.classList.contains('on');
+  document.getElementById('maxWrap').style.display = on ? 'none' : 'block';
+  document.getElementById('limitVal').textContent = on ? '♾️ Unlimited' : '—';
+  refreshTicketUI();
+  updatePv();
+}
+
+/* ── TICKET COUNTER ── */
+let sold = 0;
+function simT(n) {
+  sold += n;
+  const max = parseInt(document.getElementById('nd-max')?.value) || 0;
+  const on  = document.getElementById('noLimitTog')?.classList.contains('on');
+  if (!on && max && sold > max) sold = max;
+  refreshTicketUI();
+}
+function resetT() { sold = 0; refreshTicketUI(); }
+function refreshTicketUI() {
+  const price = parseFloat(document.getElementById('nd-price')?.value) || 0;
+  const max   = parseInt(document.getElementById('nd-max')?.value) || 0;
+  const on    = document.getElementById('noLimitTog')?.classList.contains('on');
+  const s = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  s('soldNum', sold.toLocaleString());
+  s('limitVal', on ? '♾️ Unlimited' : (max ? max.toLocaleString() : '—'));
+  s('revenueVal', '₹' + (sold*price).toLocaleString('en-IN',{maximumFractionDigits:0}));
+  if (!on && max) {
+    const pct = Math.min(100,(sold/max)*100);
+    s('fillPct', pct.toFixed(1)+'%');
+    document.getElementById('cBar').style.width = pct + '%';
+  } else {
+    s('fillPct', on ? '—' : '0%');
+    document.getElementById('cBar').style.width = '0%';
+  }
+  updatePv();
+}
+
+/* ── BUNDLES ── */
+const bundles = [];
+function addBundle() {
+  const name  = document.getElementById('b-name')?.value?.trim();
+  const count = document.getElementById('b-count')?.value;
+  const price = document.getElementById('b-price')?.value;
+  const disc  = document.getElementById('b-disc')?.value || '0';
+  if (!name || !count || !price) { notify('Please fill in bundle name, tickets, and price'); return; }
+  bundles.push({name,count,price,disc});
+  renderBundles();
+  document.getElementById('b-name').value = '';
+  document.getElementById('b-count').value = '';
+  notify(`Bundle "${name}" added!`);
+}
+function renderBundles() {
+  const el = document.getElementById('bundleList');
+  if (!el) return;
+  el.innerHTML = bundles.map((b,i) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm)">
+      <div style="flex:1"><div style="font-size:13px;font-weight:700">${b.name}</div><div style="font-size:11.5px;color:var(--muted)">${b.count} tickets · ${b.disc}% off</div></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--accent)">₹${Number(b.price).toLocaleString()}</div>
+      <button onclick="bundles.splice(${i},1);renderBundles()" style="background:none;border:none;color:var(--dim);cursor:pointer;font-size:18px;line-height:1;padding:0 2px">×</button>
+    </div>`).join('');
+}
+
+/* ── ANNOUNCEMENTS ── */
+const typeColors = {
+  'Draw Day':'badge-green','Launch':'badge-amber','Promo':'badge-yellow',
+  'Maintenance':'badge-red','Winner':'badge-yellow','Update':'badge-blue'
+};
+function addAnn() {
+  const title    = document.getElementById('ann-title')?.value?.trim();
+  const desc     = document.getElementById('ann-desc')?.value?.trim();
+  const type     = document.getElementById('ann-type')?.value;
+  const campaign = document.getElementById('ann-campaign')?.value;
+  const dateVal  = document.getElementById('ann-date')?.value;
+  const timeVal  = document.getElementById('ann-time')?.value || '12:00';
+  if (!title || !dateVal) { notify('Please enter a title and date'); return; }
+  const d = new Date(dateVal);
+  const month = d.toLocaleDateString('en-GB',{month:'short'});
+  const day   = d.getDate();
+  const html = `
+    <div class="announce-item" style="animation:slideUp 0.35s ease both">
+      <div class="announce-date-block">
+        <div class="ann-month">${month}</div>
+        <div class="ann-day">${day}</div>
+        <div class="ann-time">${timeVal}</div>
+      </div>
+      <div class="announce-body">
+        <div class="ann-title">${title}</div>
+        <div class="ann-desc">${desc || ''}</div>
+        <div class="ann-tags">
+          <span class="badge ${typeColors[type]||'badge-blue'}">${type}</span>
+          ${campaign ? `<span class="badge badge-blue">${campaign}</span>` : ''}
+        </div>
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="this.closest('.announce-item').remove();notify('Removed')">×</button>
+    </div>`;
+  document.getElementById('annList').insertAdjacentHTML('afterbegin', html);
+  document.getElementById('ann-title').value = '';
+  document.getElementById('ann-desc').value  = '';
+  notify(`📣 Announcement published!`);
+}
+
+/* ── WINNER SELECTOR ── */
+let spinning = false;
+function doSpin() {
+  if (spinning) return;
+  spinning = true;
+  const btn = document.getElementById('spinBtn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Selecting...';
+  const box = document.getElementById('winBox');
+  const placeholder = document.getElementById('winPlaceholder');
+  const result = document.getElementById('winResult');
+  const ico = document.getElementById('spinIco');
+  box.classList.remove('lit');
+  result.style.display = 'none';
+  placeholder.style.display = 'block';
+  ico.style.display = 'block';
+  placeholder.textContent = '🎲 Drawing...';
+  const parts = document.querySelectorAll('.part-item');
+  parts.forEach(p => p.classList.remove('hl'));
+  let flicker = 0;
+  const iv = setInterval(() => {
+    const r = Math.floor(Math.random() * parts.length);
+    parts.forEach(p => p.classList.remove('hl'));
+    parts[r].classList.add('hl');
+    flicker++;
+    if (flicker > 20) {
+      clearInterval(iv);
+      const winner = parts[r];
+      ico.style.display = 'none';
+      placeholder.style.display = 'none';
+      result.style.display = 'block';
+      document.getElementById('wName').textContent  = winner.dataset.name;
+      document.getElementById('wId').textContent    = winner.dataset.id;
+      document.getElementById('wPrize').textContent = '🏆 Prize: ' + winner.dataset.prize + ' Cash';
+      box.classList.add('lit');
+      document.getElementById('winActions').style.display = 'block';
+      btn.textContent = '🎲 Select Winner';
+      btn.disabled = false;
+      spinning = false;
+      notify('🏆 Winner selected: ' + winner.dataset.name);
+    }
+  }, 110);
+}
+function resetWinner() {
+  document.getElementById('winBox').classList.remove('lit');
+  document.getElementById('winResult').style.display = 'none';
+  document.getElementById('spinIco').style.display = 'none';
+  document.getElementById('winPlaceholder').style.display = 'block';
+  document.getElementById('winPlaceholder').textContent = 'Spin to select a winner';
+  document.getElementById('winActions').style.display = 'none';
+  document.querySelectorAll('.part-item').forEach(p => p.classList.remove('hl'));
+  const btn = document.getElementById('spinBtn');
+  btn.textContent = '🎲 Select Winner';
+  btn.disabled = false;
+  spinning = false;
+}
+
+// init
+updatePv();
+</script>
+
+</body>
+</html>
