@@ -1,0 +1,88 @@
+.btn10{
+position: absolute;
+    top: 0;
+    left: 120px; /* adjusted for smaller width */
+    width: 180px;
+    height: 55px;
+    background: linear-gradient(90deg, #7715f0,#9f22e7);
+    border-radius: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    user-select: none;
+    cursor: pointer;
+    white-space: none;}
+      .scroll-container1 {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+
+    /* HIDE SCROLLBAR */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scroll-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+
+  .card2{
+    min-width: 260px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 15px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    flex-shrink: 0;
+  }
+
+  .image-box3 {
+    position: relative;
+    background: #e9e9e9;
+    border-radius: 15px;
+    height: 140px;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .image-box3 img{
+     width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  }
+
+  .sold-out4 {
+    position: absolute;
+    background: black;
+    color: white;
+    padding: 10px 22px;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .title5{
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 12px;
+  }
+
+  .code6{
+    color: #999;
+    margin: 4px 0;
+  }
+
+  .draw7{
+    color: #4a3aff;
+    font-weight: bold;
+    margin-top: 8px;
+  }
+  
+
+
+   
