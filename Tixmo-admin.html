@@ -8,62 +8,104 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Figtree:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* ── DARK GREEN THEME ── */
-  --bg:        #0b1610;
-  --white:     #111f18;
-  --surface:   #0e1d14;
-  --border:    #1e3328;
-  --border2:   #172b1f;
-  --text:      #d6f0de;
-  --muted:     #6b9e7a;
-  --dim:       #3d6b4e;
+  /* ── DRAPORA-INSPIRED WHITE + TEAL/GREEN THEME ── */
+  --bg:        #f0f4f3;
+  --white:     #ffffff;
+  --surface:   #f7faf9;
+  --border:    #dde8e4;
+  --border2:   #eaf2ef;
 
-–accent:    #1db954;
-–accent-l:  #0d2c1a;
-–accent-m:  #25e066;
-–accent-d:  #13873c;
+–text:      #0d1f1a;
+–muted:     #527a6e;
+–dim:       #8fb5a8;
 
-–pink:      #f0527a;
-–pink-l:    #2a0f18;
-–gold:      #f0c040;
-–gold-l:    #2a2000;
-–green:     #22c55e;
-–green-l:   #0a2818;
-–red:       #f05050;
-–red-l:     #2a0a0a;
-–amber:     #f0a030;
-–amber-l:   #2a1800;
-–teal:      #14b8a6;
-–teal-l:    #0a2220;
+/* Primary teal-green accent (Drapora brand) */
+–accent:    #2d8c72;
+–accent-l:  #e6f5f1;
+–accent-m:  #3ab894;
+–accent-d:  #1f6854;
+–accent-glow: rgba(45,140,114,.18);
 
-–shadow-sm: 0 1px 4px rgba(0,0,0,.4);
-–shadow:    0 4px 20px rgba(0,0,0,.5);
-–shadow-lg: 0 12px 48px rgba(0,0,0,.65);
+/* Sidebar accent deep teal */
+–sidebar-active: #1e6b58;
+–sidebar-bg:     #ffffff;
+–sidebar-hover:  #f0faf7;
+
+/* Button shades */
+–btn-green:   #2d8c72;
+–btn-green-h: #3ab894;
+–btn-white:   #ffffff;
+
+–pink:      #e05070;
+–pink-l:    #fceef2;
+–gold:      #c8900a;
+–gold-l:    #fdf5e0;
+–green:     #1a9150;
+–green-l:   #e8f8ee;
+–red:       #d94040;
+–red-l:     #fde8e8;
+–amber:     #c07020;
+–amber-l:   #fef3e0;
+–teal:      #0e9b8a;
+–teal-l:    #e4f7f4;
+
+–shadow-sm: 0 1px 4px rgba(13,31,26,.06), 0 1px 2px rgba(13,31,26,.04);
+–shadow:    0 4px 18px rgba(13,31,26,.08), 0 1px 4px rgba(13,31,26,.05);
+–shadow-lg: 0 12px 40px rgba(13,31,26,.12), 0 4px 12px rgba(13,31,26,.06);
 –r:14px; –rs:8px; –rl:20px;
 }
 
-/* ── GLOBAL OVERRIDES FOR DARK ── */
-input,select,textarea{
-background:#0e1d14 !important;
-border-color:#1e3328 !important;
-color:#d6f0de !important;
-color-scheme:dark;
+/* ── GLOBAL FORM STYLES ── */
+input, select, textarea {
+background: var(–white) !important;
+border-color: var(–border) !important;
+color: var(–text) !important;
+color-scheme: light;
 }
-input::placeholder,textarea::placeholder{color:#3d6b4e !important}
-select option{background:#111f18;color:#d6f0de}
-input:focus,select:focus,textarea:focus{
-border-color:#1db954 !important;
-box-shadow:0 0 0 3px rgba(29,185,84,.15) !important;
-background:#111f18 !important;
+input::placeholder, textarea::placeholder { color: var(–dim) !important; }
+select option { background: var(–white); color: var(–text); }
+input:focus, select:focus, textarea:focus {
+border-color: var(–accent) !important;
+box-shadow: 0 0 0 3px var(–accent-glow) !important;
+background: var(–white) !important;
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{background:var(–bg);font-family:‘Figtree’,sans-serif;color:var(–text);min-height:100vh;overflow-x:hidden;font-size:14px;line-height:1.5}
+/* ── ANIMATED SHIMMER ON BUTTONS ── */
+@keyframes btnShimmer {
+0%   { transform: translateX(-160%) skewX(-15deg); opacity: .6; }
+100% { transform: translateX(220%)  skewX(-15deg); opacity: .6; }
+}
+@keyframes sidebarPulse {
+0%,100% { box-shadow: 0 0 0 0 rgba(45,140,114,.3); }
+50%      { box-shadow: 0 0 0 5px rgba(45,140,114,0); }
+}
+@keyframes greenGlow {
+0%,100% { box-shadow: 0 2px 12px rgba(45,140,114,.2); }
+50%      { box-shadow: 0 4px 24px rgba(45,140,114,.45); }
+}
 
-/* subtle green grid bg */
-body::before{content:’’;position:fixed;inset:0;background:radial-gradient(ellipse 70% 50% at 20% 10%,rgba(29,185,84,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 80% 90%,rgba(20,184,166,.04) 0%,transparent 60%);pointer-events:none;z-index:0}
-.shell{position:relative;z-index:1}
+- { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+  background: var(–bg);
+  font-family: ‘Helvetica Neue’, ‘Figtree’, sans-serif;
+  color: var(–text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.5;
+  }
+
+/* Subtle warm tint overlay */
+body::before {
+content: ‘’;
+position: fixed; inset: 0;
+background:
+radial-gradient(ellipse 60% 40% at 15% 10%, rgba(45,140,114,.04) 0%, transparent 60%),
+radial-gradient(ellipse 40% 30% at 85% 85%, rgba(58,184,148,.03) 0%, transparent 60%);
+pointer-events: none; z-index: 0;
+}
+.shell { position: relative; z-index: 1; }
 
 @keyframes fadeIn  {from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeL   {from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
@@ -569,6 +611,14 @@ WINNER SELECTOR — POWERFUL
   <div class="nl">Users</div>
   <button class="ni" onclick="go('users',this)"><span class="ni-ico">👤</span>Login Users</button>
   <button class="ni" onclick="go('support',this)"><span class="ni-ico">🎧</span>Support Tickets<span class="nb nb-amber">3</span></button>
+  <button class="ni" onclick="go('reviews',this)"><span class="ni-ico">⭐</span>Reviews & Ratings<span class="nb nb-green">NEW</span></button>
+  <div class="nl">E-Commerce</div>
+  <button class="ni" onclick="go('ec-overview',this)"><span class="ni-ico">🛒</span>Store Overview</button>
+  <button class="ni" onclick="go('ec-products',this)"><span class="ni-ico">📦</span>Products</button>
+  <button class="ni" onclick="go('ec-orders',this)"><span class="ni-ico">🧾</span>Orders<span class="nb nb-amber">12</span></button>
+  <button class="ni" onclick="go('ec-inventory',this)"><span class="ni-ico">🏭</span>Inventory</button>
+  <button class="ni" onclick="go('ec-revenue',this)"><span class="ni-ico">📈</span>Revenue</button>
+  <button class="ni" onclick="go('ec-customers',this)"><span class="ni-ico">🧑‍💼</span>Customers</button>
   <div class="nl">System</div>
   <button class="ni" onclick="go('reports',this)"><span class="ni-ico">📊</span>Reports & Analytics</button>
   <button class="ni" onclick="go('settings',this)"><span class="ni-ico">⚙️</span>Settings</button>
@@ -1132,13 +1182,281 @@ WINNER SELECTOR — POWERFUL
     </div>
   </div>
 
+  </div>
+
+  <!-- ════════════ REVIEWS & RATINGS ════════════ -->
+
+  <div class="panel" id="panel-reviews">
+    <div class="sg sg3 gap">
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--gold-l)">⭐</div><div class="sc-tr up">↑ 4.8</div></div><div class="sc-lbl">Avg Rating</div><div class="sc-val">4.8 / 5</div><div class="bar"><div class="bar-f" style="--w:96%;background:var(--gold)"></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--accent-l)">💬</div><div class="sc-tr up">↑ 18%</div></div><div class="sc-lbl">Total Reviews</div><div class="sc-val">3,240</div><div class="bar"><div class="bar-f" style="--w:78%;background:var(--accent)"></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--red-l)">🚩</div><div class="sc-tr dn">5 new</div></div><div class="sc-lbl">Flagged</div><div class="sc-val">5</div><div class="bar"><div class="bar-f" style="--w:3%;background:var(--red)"></div></div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--gold-l)">⭐</div>Recent Reviews</div><div style="display:flex;gap:8px"><select style="padding:5px 10px;font-size:12px;width:auto"><option>All Stars</option><option>5 ★</option><option>4 ★</option><option>3 ★</option><option>1-2 ★</option></select></div></div>
+        <div class="tw"><table><thead><tr><th>User</th><th>Draw</th><th>Rating</th><th>Comment</th><th>Date</th><th>Action</th></tr></thead><tbody>
+          <tr><td class="tb2">M. Althaf</td><td class="tm">DC-00648</td><td style="color:var(--gold);font-weight:700">★★★★★</td><td style="font-size:12px;max-width:200px">Amazing experience, transparent and fair draw!</td><td class="tm">May 04</td><td><button class="btn bsm bg" onclick="notify('Approved!')">Approve</button></td></tr>
+          <tr><td class="tb2">R. Kumar</td><td class="tm">DC-00647</td><td style="color:var(--gold);font-weight:700">★★★★☆</td><td style="font-size:12px;max-width:200px">Great platform, slight delay in ticket issuance.</td><td class="tm">May 03</td><td><button class="btn bsm bg" onclick="notify('Approved!')">Approve</button></td></tr>
+          <tr><td class="tb2">P. Sharma</td><td class="tm">DC-00646</td><td style="color:var(--red);font-weight:700">★★☆☆☆</td><td style="font-size:12px;max-width:200px">Winner not announced on time. Very disappointed.</td><td class="tm">May 02</td><td><button class="btn bsm bd" onclick="notify('Review removed!')">Remove</button></td></tr>
+          <tr><td class="tb2">A. Joshi</td><td class="tm">DC-00648</td><td style="color:var(--gold);font-weight:700">★★★★★</td><td style="font-size:12px;max-width:200px">Best lottery platform in India. Highly recommend!</td><td class="tm">May 01</td><td><button class="btn bsm bg" onclick="notify('Approved!')">Approve</button></td></tr>
+          <tr><td class="tb2">S. Nair</td><td class="tm">DC-00645</td><td style="color:var(--gold);font-weight:700">★★★★☆</td><td style="font-size:12px;max-width:200px">Smooth checkout, wallet credits fast.</td><td class="tm">Apr 30</td><td><button class="btn bsm bg" onclick="notify('Approved!')">Approve</button></td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--accent-l)">📊</div>Rating Breakdown</div></div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+          <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--gold)">★★★★★ 5 stars</span><span style="font-weight:700">68%</span></div><div class="mb" style="height:8px"><div class="mbf" style="width:68%;background:var(--gold)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--gold)">★★★★☆ 4 stars</span><span style="font-weight:700">20%</span></div><div class="mb" style="height:8px"><div class="mbf" style="width:20%;background:var(--amber)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--muted)">★★★☆☆ 3 stars</span><span style="font-weight:700">7%</span></div><div class="mb" style="height:8px"><div class="mbf" style="width:7%;background:var(--muted)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--red)">★★☆☆☆ 2 stars</span><span style="font-weight:700">3%</span></div><div class="mb" style="height:8px"><div class="mbf" style="width:3%;background:var(--red)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--red)">★☆☆☆☆ 1 star</span><span style="font-weight:700">2%</span></div><div class="mb" style="height:8px"><div class="mbf" style="width:2%;background:var(--pink)"></div></div></div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:10px">Publish a Response</div>
+        <div class="fg" style="margin-bottom:10px"><label>Review ID / User</label><input placeholder="Select review to respond to..."></div>
+        <div class="fg" style="margin-bottom:12px"><label>Your Response</label><textarea placeholder="Thank you for your feedback..."></textarea></div>
+        <button class="btn bp bfull" onclick="notify('Response published!')">📤 Publish Response</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ E-COMMERCE OVERVIEW ════════════ -->
+
+  <div class="panel" id="panel-ec-overview">
+    <div class="sg" style="margin-bottom:18px">
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--accent-l)">🛒</div><div class="sc-tr up">↑ 34%</div></div><div class="sc-lbl">Total Orders</div><div class="sc-val">8,420</div><div class="bar"><div class="bar-f" style="--w:74%;background:var(--accent)"></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--green-l)">💰</div><div class="sc-tr up">↑ 28%</div></div><div class="sc-lbl">Store Revenue</div><div class="sc-val">₹18.4M</div><div class="bar"><div class="bar-f" style="--w:65%;background:var(--green)"></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--pink-l)">📦</div><div class="sc-tr up">↑ 12%</div></div><div class="sc-lbl">Products Active</div><div class="sc-val">142</div><div class="bar"><div class="bar-f" style="--w:58%;background:var(--pink)"></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--amber-l)">⚠️</div><div class="sc-tr dn">8 items</div></div><div class="sc-lbl">Low Stock</div><div class="sc-val">8</div><div class="bar"><div class="bar-f" style="--w:10%;background:var(--amber)"></div></div></div>
+    </div>
+    <div class="sg sg5" style="margin-bottom:20px">
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--teal-l)">🔁</div><div class="sc-tr up">↑ 8%</div></div><div class="sc-lbl">Repeat Buyers</div><div class="sc-val" style="font-size:22px">42%</div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--red-l)">↩️</div><div class="sc-tr dn">2 new</div></div><div class="sc-lbl">Returns</div><div class="sc-val" style="font-size:22px">14</div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--gold-l)">⭐</div><div class="sc-tr up">4.7</div></div><div class="sc-lbl">Avg Rating</div><div class="sc-val" style="font-size:22px">4.7</div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--accent-l)">🚚</div><div class="sc-tr up">96%</div></div><div class="sc-lbl">On-Time Delivery</div><div class="sc-val" style="font-size:22px">96%</div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--pink-l)">🛒</div><div class="sc-tr dn">↑ 3%</div></div><div class="sc-lbl">Cart Abandon</div><div class="sc-val" style="font-size:22px">31%</div></div>
+    </div>
+    <div class="g65">
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--accent-l)">🧾</div>Recent Orders</div><span class="ca" onclick="go('ec-orders',document.querySelectorAll('.ni')[16])">View all →</span></div>
+        <div class="tw"><table><thead><tr><th>Order #</th><th>Customer</th><th>Product</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>
+          <tr><td class="tm tb2">#ORD-8420</td><td>M. Althaf</td><td>Dream Ticket Bundle</td><td class="tm" style="color:var(--green);font-weight:700">₹4,600</td><td><span class="badge bgreen"><span class="bdot"></span>Delivered</span></td><td class="tm">May 04</td></tr>
+          <tr><td class="tm tb2">#ORD-8419</td><td>R. Kumar</td><td>Premium Cap</td><td class="tm" style="color:var(--green);font-weight:700">₹1,299</td><td><span class="badge byellow"><span class="bdot"></span>Shipped</span></td><td class="tm">May 03</td></tr>
+          <tr><td class="tm tb2">#ORD-8418</td><td>P. Sharma</td><td>Gold Membership</td><td class="tm" style="color:var(--green);font-weight:700">₹9,999</td><td><span class="badge bblue"><span class="bdot"></span>Processing</span></td><td class="tm">May 03</td></tr>
+          <tr><td class="tm tb2">#ORD-8417</td><td>A. Joshi</td><td>Exclusive Merch Pack</td><td class="tm" style="color:var(--green);font-weight:700">₹2,450</td><td><span class="badge bgreen"><span class="bdot"></span>Delivered</span></td><td class="tm">May 02</td></tr>
+          <tr><td class="tm tb2">#ORD-8416</td><td>S. Nair</td><td>Dream Dubai T-Shirt</td><td class="tm" style="color:var(--red);font-weight:700">₹899</td><td><span class="badge bred"><span class="bdot"></span>Returned</span></td><td class="tm">May 01</td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--gold-l)">🏆</div>Top Products</div></div>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--surface);border-radius:var(--rs);border:1px solid var(--border)"><div style="width:36px;height:36px;border-radius:8px;background:var(--accent-l);display:flex;align-items:center;justify-content:center;font-size:18px">🎟️</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Ticket Bundle x20</div><div style="font-size:11px;color:var(--muted)">2,840 sold</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--green)">₹13.1M</div></div>
+          <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--surface);border-radius:var(--rs);border:1px solid var(--border)"><div style="width:36px;height:36px;border-radius:8px;background:var(--gold-l);display:flex;align-items:center;justify-content:center;font-size:18px">👑</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Gold Membership</div><div style="font-size:11px;color:var(--muted)">420 sold</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--green)">₹4.2M</div></div>
+          <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--surface);border-radius:var(--rs);border:1px solid var(--border)"><div style="width:36px;height:36px;border-radius:8px;background:var(--pink-l);display:flex;align-items:center;justify-content:center;font-size:18px">🧢</div><div style="flex:1"><div style="font-size:13px;font-weight:700">DD Premium Cap</div><div style="font-size:11px;color:var(--muted)">890 sold</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--green)">₹1.2M</div></div>
+          <div style="display:flex;align-items:center;gap:11px;padding:9px;background:var(--surface);border-radius:var(--rs);border:1px solid var(--border)"><div style="width:36px;height:36px;border-radius:8px;background:var(--teal-l);display:flex;align-items:center;justify-content:center;font-size:18px">👕</div><div style="flex:1"><div style="font-size:13px;font-weight:700">Dream Dubai T-Shirt</div><div style="font-size:11px;color:var(--muted)">1,240 sold</div></div><div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--green)">₹1.1M</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ PRODUCTS ════════════ -->
+
+  <div class="panel" id="panel-ec-products">
+    <div class="g65">
+      <div class="card">
+        <div class="ch">
+          <div class="ct"><div class="ctico" style="background:var(--pink-l)">📦</div>All Products</div>
+          <div style="display:flex;gap:8px">
+            <input type="text" placeholder="🔍 Search products..." style="width:180px;padding:7px 11px;font-size:13px">
+            <select style="padding:7px 10px;font-size:13px;width:auto"><option>All Categories</option><option>Tickets</option><option>Memberships</option><option>Merchandise</option><option>Digital</option></select>
+          </div>
+        </div>
+        <div class="tw"><table><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Sold</th><th>Revenue</th><th>Status</th><th></th></tr></thead><tbody>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:6px;background:var(--accent-l);display:flex;align-items:center;justify-content:center;font-size:14px">🎟️</div><div class="tb2">Ticket Bundle x20</div></div></td><td>Tickets</td><td class="tm">₹4,600</td><td style="color:var(--green);font-weight:600">∞</td><td class="tm">2,840</td><td class="tm" style="color:var(--green)">₹13.1M</td><td><span class="badge bgreen">Active</span></td><td><button class="btn bsm bs" onclick="notify('Product opened')">Edit</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:6px;background:var(--gold-l);display:flex;align-items:center;justify-content:center;font-size:14px">👑</div><div class="tb2">Gold Membership</div></div></td><td>Membership</td><td class="tm">₹9,999</td><td style="color:var(--green);font-weight:600">500</td><td class="tm">420</td><td class="tm" style="color:var(--green)">₹4.2M</td><td><span class="badge bgreen">Active</span></td><td><button class="btn bsm bs" onclick="notify('Product opened')">Edit</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:6px;background:var(--pink-l);display:flex;align-items:center;justify-content:center;font-size:14px">🧢</div><div class="tb2">DD Premium Cap</div></div></td><td>Merch</td><td class="tm">₹1,299</td><td style="color:var(--amber);font-weight:600">12</td><td class="tm">890</td><td class="tm" style="color:var(--green)">₹1.2M</td><td><span class="badge byellow">Low Stock</span></td><td><button class="btn bsm bs" onclick="notify('Product opened')">Edit</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:6px;background:var(--teal-l);display:flex;align-items:center;justify-content:center;font-size:14px">👕</div><div class="tb2">Dream Dubai T-Shirt</div></div></td><td>Merch</td><td class="tm">₹899</td><td style="color:var(--green);font-weight:600">340</td><td class="tm">1,240</td><td class="tm" style="color:var(--green)">₹1.1M</td><td><span class="badge bgreen">Active</span></td><td><button class="btn bsm bs" onclick="notify('Product opened')">Edit</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:30px;height:30px;border-radius:6px;background:var(--amber-l);display:flex;align-items:center;justify-content:center;font-size:14px">📱</div><div class="tb2">Digital Pass — VIP</div></div></td><td>Digital</td><td class="tm">₹2,499</td><td style="color:var(--green);font-weight:600">∞</td><td class="tm">188</td><td class="tm" style="color:var(--green)">₹0.5M</td><td><span class="badge bred">Paused</span></td><td><button class="btn bsm bs" onclick="notify('Product opened')">Edit</button></td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="card" style="position:sticky;top:76px">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--green-l)">➕</div>Add New Product</div></div>
+        <div class="fg" style="margin-bottom:10px"><label>Product Name</label><input placeholder="e.g. Ticket Bundle x50"></div>
+        <div class="fr" style="margin-bottom:10px">
+          <div class="fg"><label>Category</label><select><option>Tickets</option><option>Membership</option><option>Merchandise</option><option>Digital</option></select></div>
+          <div class="fg"><label>Price (₹)</label><div class="iw"><span class="pre">₹</span><input type="number" placeholder="4600"></div></div>
+        </div>
+        <div class="fr" style="margin-bottom:10px">
+          <div class="fg"><label>Stock Qty</label><input type="number" placeholder="100"></div>
+          <div class="fg"><label>SKU</label><input placeholder="DD-TKT-050"></div>
+        </div>
+        <div class="fg" style="margin-bottom:10px"><label>Description</label><textarea placeholder="Product description..."></textarea></div>
+        <div class="fr" style="margin-bottom:10px">
+          <div class="fg"><label>Discount %</label><input type="number" placeholder="0"></div>
+          <div class="fg"><label>Tax %</label><input type="number" placeholder="18"></div>
+        </div>
+        <div class="trow" style="padding:8px 0"><div><div class="ti-name">Featured Product</div><div class="ti-desc">Show on homepage</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+        <div class="trow" style="padding:8px 0 12px"><div><div class="ti-name">Track Inventory</div><div class="ti-desc">Alert on low stock</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="br">
+          <button class="btn bs">Save Draft</button>
+          <button class="btn bp" style="flex:1" onclick="notify('Product published!')">🚀 Publish Product</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ ORDERS ════════════ -->
+
+  <div class="panel" id="panel-ec-orders">
+    <div class="sg sg5 gap">
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--accent-l)">📥</div><div class="sc-tr up">Today</div></div><div class="sc-lbl">New Orders</div><div class="sc-val" style="font-size:22px">38</div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--gold-l)">⚙️</div><div class="sc-tr dn">12 open</div></div><div class="sc-lbl">Processing</div><div class="sc-val" style="font-size:22px">12</div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--teal-l)">🚚</div><div class="sc-tr up">↑ 5%</div></div><div class="sc-lbl">Shipped</div><div class="sc-val" style="font-size:22px">84</div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--green-l)">✅</div><div class="sc-tr up">96%</div></div><div class="sc-lbl">Delivered</div><div class="sc-val" style="font-size:22px">8,282</div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--red-l)">↩️</div><div class="sc-tr dn">2 new</div></div><div class="sc-lbl">Returns</div><div class="sc-val" style="font-size:22px">14</div></div>
+    </div>
+    <div class="card">
+      <div class="ch">
+        <div class="ct"><div class="ctico" style="background:var(--accent-l)">🧾</div>All Orders</div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input type="text" placeholder="🔍 Order # or customer..." style="width:200px;padding:7px 11px;font-size:13px">
+          <select style="padding:7px 10px;font-size:13px;width:auto"><option>All Status</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Returned</option></select>
+          <button class="btn bs bsm" onclick="notify('Export started!')">⬇ Export</button>
+        </div>
+      </div>
+      <div class="tw"><table><thead><tr><th>Order #</th><th>Customer</th><th>Product</th><th>Qty</th><th>Amount</th><th>Payment</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>
+        <tr><td class="tm tb2">#ORD-8420</td><td>M. Althaf</td><td>Ticket Bundle x20</td><td>1</td><td class="tm" style="color:var(--green);font-weight:700">₹4,600</td><td><span class="badge bgreen">Paid</span></td><td><span class="badge bgreen"><span class="bdot"></span>Delivered</span></td><td class="tm">May 04</td><td><button class="btn bsm bs" onclick="notify('Order details opened')">View</button></td></tr>
+        <tr><td class="tm tb2">#ORD-8419</td><td>R. Kumar</td><td>DD Premium Cap</td><td>2</td><td class="tm" style="color:var(--green);font-weight:700">₹2,598</td><td><span class="badge bgreen">Paid</span></td><td><span class="badge byellow"><span class="bdot"></span>Shipped</span></td><td class="tm">May 03</td><td><button class="btn bsm bs" onclick="notify('Order details opened')">View</button></td></tr>
+        <tr><td class="tm tb2">#ORD-8418</td><td>P. Sharma</td><td>Gold Membership</td><td>1</td><td class="tm" style="color:var(--green);font-weight:700">₹9,999</td><td><span class="badge bgreen">Paid</span></td><td><span class="badge bblue"><span class="bdot"></span>Processing</span></td><td class="tm">May 03</td><td><button class="btn bsm bs" onclick="notify('Order details opened')">View</button></td></tr>
+        <tr><td class="tm tb2">#ORD-8417</td><td>A. Joshi</td><td>Merch Pack Bundle</td><td>1</td><td class="tm" style="color:var(--green);font-weight:700">₹2,450</td><td><span class="badge bgreen">Paid</span></td><td><span class="badge bgreen"><span class="bdot"></span>Delivered</span></td><td class="tm">May 02</td><td><button class="btn bsm bs" onclick="notify('Order details opened')">View</button></td></tr>
+        <tr><td class="tm tb2">#ORD-8416</td><td>S. Nair</td><td>Dream Dubai T-Shirt</td><td>1</td><td class="tm" style="color:var(--red);font-weight:700">₹899</td><td><span class="badge byellow">Refunding</span></td><td><span class="badge bred"><span class="bdot"></span>Returned</span></td><td class="tm">May 01</td><td><button class="btn bsm bd" onclick="notify('Refund processed!')">Refund</button></td></tr>
+        <tr><td class="tm tb2">#ORD-8415</td><td>V. Patel</td><td>Digital VIP Pass</td><td>1</td><td class="tm" style="color:var(--green);font-weight:700">₹2,499</td><td><span class="badge bteal">Wallet</span></td><td><span class="badge bgreen"><span class="bdot"></span>Delivered</span></td><td class="tm">Apr 30</td><td><button class="btn bsm bs" onclick="notify('Order details opened')">View</button></td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+
+  <!-- ════════════ INVENTORY ════════════ -->
+
+  <div class="panel" id="panel-ec-inventory">
+    <div class="sg sg3 gap">
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--green-l)">✅</div><div class="sc-tr up">Normal</div></div><div class="sc-lbl">In Stock</div><div class="sc-val">134</div><div class="bar"><div class="bar-f" style="--w:94%;background:var(--green)"></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--amber-l)">⚠️</div><div class="sc-tr dn">8 items</div></div><div class="sc-lbl">Low Stock</div><div class="sc-val">8</div><div class="bar"><div class="bar-f" style="--w:10%;background:var(--amber)"></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--red-l)">❌</div><div class="sc-tr dn">2 items</div></div><div class="sc-lbl">Out of Stock</div><div class="sc-val">2</div><div class="bar"><div class="bar-f" style="--w:2%;background:var(--red)"></div></div></div>
+    </div>
+    <div class="g2">
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--accent-l)">🏭</div>Inventory Status</div><button class="btn bp bsm" onclick="notify('Stock updated!')">+ Restock</button></div>
+        <div class="tw"><table><thead><tr><th>Product</th><th>SKU</th><th>In Stock</th><th>Reserved</th><th>Available</th><th>Reorder At</th><th>Status</th></tr></thead><tbody>
+          <tr><td class="tb2">🎟️ Ticket Bundle x20</td><td class="tm">DD-TKT-020</td><td style="font-weight:700;color:var(--accent)">∞</td><td class="tm">—</td><td style="font-weight:700;color:var(--accent)">∞</td><td class="tm">—</td><td><span class="badge bblue">Digital</span></td></tr>
+          <tr><td class="tb2">👑 Gold Membership</td><td class="tm">DD-MEM-GOLD</td><td style="font-weight:700;color:var(--green)">80</td><td class="tm">12</td><td style="font-weight:700;color:var(--green)">68</td><td class="tm">50</td><td><span class="badge bgreen">OK</span></td></tr>
+          <tr><td class="tb2">🧢 DD Premium Cap</td><td class="tm">DD-CAP-001</td><td style="font-weight:700;color:var(--amber)">12</td><td class="tm">3</td><td style="font-weight:700;color:var(--amber)">9</td><td class="tm">20</td><td><span class="badge byellow">Low</span></td></tr>
+          <tr><td class="tb2">👕 Dream Dubai T-Shirt</td><td class="tm">DD-TSH-001</td><td style="font-weight:700;color:var(--green)">340</td><td class="tm">18</td><td style="font-weight:700;color:var(--green)">322</td><td class="tm">50</td><td><span class="badge bgreen">OK</span></td></tr>
+          <tr><td class="tb2">📱 Digital VIP Pass</td><td class="tm">DD-VIP-001</td><td style="font-weight:700;color:var(--red)">0</td><td class="tm">0</td><td style="font-weight:700;color:var(--red)">0</td><td class="tm">10</td><td><span class="badge bred">Out</span></td></tr>
+          <tr><td class="tb2">🧣 DD Branded Hoodie</td><td class="tm">DD-HOD-001</td><td style="font-weight:700;color:var(--amber)">5</td><td class="tm">2</td><td style="font-weight:700;color:var(--amber)">3</td><td class="tm">15</td><td><span class="badge byellow">Low</span></td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--green-l)">📥</div>Restock Request</div></div>
+        <div class="fg" style="margin-bottom:10px"><label>Product</label><select><option>DD Premium Cap</option><option>Digital VIP Pass</option><option>DD Branded Hoodie</option></select></div>
+        <div class="fr" style="margin-bottom:10px">
+          <div class="fg"><label>Quantity to Add</label><input type="number" placeholder="100"></div>
+          <div class="fg"><label>Supplier</label><input placeholder="Supplier name"></div>
+        </div>
+        <div class="fr" style="margin-bottom:10px">
+          <div class="fg"><label>Cost Price (₹)</label><div class="iw"><span class="pre">₹</span><input type="number" placeholder="400"></div></div>
+          <div class="fg"><label>Expected Date</label><input type="date"></div>
+        </div>
+        <div class="fg" style="margin-bottom:12px"><label>Notes</label><textarea placeholder="Restock notes..."></textarea></div>
+        <button class="btn bp bfull" onclick="notify('Restock order raised!')">📦 Raise Restock Order</button>
+        <div class="divider"></div>
+        <div style="font-size:12.5px;font-weight:700;margin-bottom:10px;color:var(--text)">🔔 Low Stock Alerts</div>
+        <div class="trow"><div><div class="ti-name">Auto-alert below threshold</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="trow"><div><div class="ti-name">Email supplier on reorder point</div></div><div class="tog" onclick="this.classList.toggle('on')"></div></div>
+        <div class="trow"><div><div class="ti-name">Pause sales when out of stock</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ REVENUE ════════════ -->
+
+  <div class="panel" id="panel-ec-revenue">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-l">Gross Revenue</div><div class="kpi-v" style="color:var(--green)">₹18.4M</div></div>
+      <div class="kpi"><div class="kpi-l">Net Revenue</div><div class="kpi-v" style="color:var(--accent)">₹15.8M</div></div>
+      <div class="kpi"><div class="kpi-l">Avg Order Value</div><div class="kpi-v" style="color:var(--gold)">₹2,185</div></div>
+      <div class="kpi"><div class="kpi-l">Refunds</div><div class="kpi-v" style="color:var(--red)">₹42K</div></div>
+      <div class="kpi"><div class="kpi-l">Tax Collected</div><div class="kpi-v" style="color:var(--muted)">₹2.6M</div></div>
+      <div class="kpi"><div class="kpi-l">Profit Margin</div><div class="kpi-v" style="color:var(--teal)">34%</div></div>
+    </div>
+    <div class="g2 gap">
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--green-l)">📈</div>Revenue by Category</div><select style="padding:5px 10px;font-size:12px;width:auto"><option>Last 30 days</option><option>Last Quarter</option><option>This Year</option></select></div>
+        <div style="display:flex;flex-direction:column;gap:13px">
+          <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>🎟️ Ticket Bundles</span><span style="font-weight:700;font-family:'JetBrains Mono',monospace">₹13.1M <span style="font-size:11px;color:var(--green)">(71%)</span></span></div><div class="mb" style="height:8px"><div class="mbf" style="width:71%;background:var(--accent)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>👑 Memberships</span><span style="font-weight:700;font-family:'JetBrains Mono',monospace">₹4.2M <span style="font-size:11px;color:var(--green)">(23%)</span></span></div><div class="mb" style="height:8px"><div class="mbf" style="width:23%;background:var(--gold)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>🧢 Merchandise</span><span style="font-weight:700;font-family:'JetBrains Mono',monospace">₹0.9M <span style="font-size:11px;color:var(--muted)">(5%)</span></span></div><div class="mb" style="height:8px"><div class="mbf" style="width:5%;background:var(--pink)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px"><span>📱 Digital Passes</span><span style="font-weight:700;font-family:'JetBrains Mono',monospace">₹0.2M <span style="font-size:11px;color:var(--muted)">(1%)</span></span></div><div class="mb" style="height:8px"><div class="mbf" style="width:1%;background:var(--teal)"></div></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--gold-l)">📅</div>Monthly Revenue</div></div>
+        <div class="tw"><table><thead><tr><th>Month</th><th>Orders</th><th>Revenue</th><th>Refunds</th><th>Net</th><th>Growth</th></tr></thead><tbody>
+          <tr><td class="tb2">May 2026</td><td>420</td><td class="tm" style="color:var(--green)">₹2.1M</td><td class="tm" style="color:var(--red)">₹4K</td><td class="tm" style="color:var(--green);font-weight:700">₹2.1M</td><td><span class="badge bgreen">↑ 28%</span></td></tr>
+          <tr><td class="tb2">Apr 2026</td><td>890</td><td class="tm" style="color:var(--green)">₹3.8M</td><td class="tm" style="color:var(--red)">₹12K</td><td class="tm" style="color:var(--green);font-weight:700">₹3.8M</td><td><span class="badge bgreen">↑ 14%</span></td></tr>
+          <tr><td class="tb2">Mar 2026</td><td>1,240</td><td class="tm" style="color:var(--green)">₹4.8M</td><td class="tm" style="color:var(--red)">₹8K</td><td class="tm" style="color:var(--green);font-weight:700">₹4.8M</td><td><span class="badge bgreen">↑ 22%</span></td></tr>
+          <tr><td class="tb2">Feb 2026</td><td>980</td><td class="tm" style="color:var(--green)">₹3.9M</td><td class="tm" style="color:var(--red)">₹18K</td><td class="tm" style="color:var(--green);font-weight:700">₹3.9M</td><td><span class="badge byellow">↑ 6%</span></td></tr>
+          <tr><td class="tb2">Jan 2026</td><td>840</td><td class="tm" style="color:var(--green)">₹3.7M</td><td class="tm" style="color:var(--red)">₹0K</td><td class="tm" style="color:var(--green);font-weight:700">₹3.7M</td><td><span class="badge bblue">Base</span></td></tr>
+        </tbody></table></div>
+        <div class="br" style="margin-top:14px"><button class="btn bs bfull" onclick="notify('Revenue report exported!')">⬇ Export Revenue Report</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ E-COMMERCE CUSTOMERS ════════════ -->
+
+  <div class="panel" id="panel-ec-customers">
+    <div class="sg sg3 gap">
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--accent-l)">🧑‍💼</div><div class="sc-tr up">↑ 340</div></div><div class="sc-lbl">Store Customers</div><div class="sc-val">5,840</div><div class="bar"><div class="bar-f" style="--w:72%;background:var(--accent)"></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--teal-l)">🔁</div><div class="sc-tr up">↑ 8%</div></div><div class="sc-lbl">Repeat Customers</div><div class="sc-val">2,452</div><div class="bar"><div class="bar-f" style="--w:42%;background:var(--teal)"></div></div></div>
+      <div class="sc"><div class="sc-top"><div class="sc-ico" style="background:var(--gold-l)">💎</div><div class="sc-tr up">VIP</div></div><div class="sc-lbl">VIP Members</div><div class="sc-val">420</div><div class="bar"><div class="bar-f" style="--w:10%;background:var(--gold)"></div></div></div>
+    </div>
+    <div class="g65">
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--accent-l)">👥</div>Customer List</div>
+          <div style="display:flex;gap:8px"><input type="text" placeholder="🔍 Search..." style="width:180px;padding:7px 11px;font-size:13px"><select style="padding:7px 10px;font-size:13px;width:auto"><option>All Tiers</option><option>VIP</option><option>Regular</option><option>New</option></select></div>
+        </div>
+        <div class="tw"><table><thead><tr><th>Customer</th><th>Email</th><th>Tier</th><th>Orders</th><th>Total Spent</th><th>Last Order</th><th>Action</th></tr></thead><tbody>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#7c3aed;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">MA</div><span class="tb2">Muhammed Althaf</span></div></td><td class="tm">m.althaf@email.com</td><td><span class="badge bblue">VIP</span></td><td style="font-weight:600">24</td><td class="tm" style="color:var(--green);font-weight:700">₹82,400</td><td class="tm">May 04</td><td><button class="btn bsm bs" onclick="notify('Profile opened')">View</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#d4245a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">RK</div><span class="tb2">Rahul Kumar</span></div></td><td class="tm">rahul.k@email.com</td><td><span class="badge byellow">Gold</span></td><td style="font-weight:600">18</td><td class="tm" style="color:var(--green);font-weight:700">₹44,100</td><td class="tm">May 03</td><td><button class="btn bsm bs" onclick="notify('Profile opened')">View</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#c4860a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">PS</div><span class="tb2">Priya Sharma</span></div></td><td class="tm">priya.s@email.com</td><td><span class="badge bgreen">Regular</span></td><td style="font-weight:600">7</td><td class="tm" style="color:var(--green);font-weight:700">₹12,300</td><td class="tm">May 02</td><td><button class="btn bsm bs" onclick="notify('Profile opened')">View</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#1a7a4a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">AJ</div><span class="tb2">Arjun Joshi</span></div></td><td class="tm">arjun.j@email.com</td><td><span class="badge bgreen">Regular</span></td><td style="font-weight:600">3</td><td class="tm" style="color:var(--green);font-weight:700">₹5,640</td><td class="tm">May 02</td><td><button class="btn bsm bs" onclick="notify('Profile opened')">View</button></td></tr>
+          <tr><td><div style="display:flex;align-items:center;gap:8px"><div style="width:28px;height:28px;border-radius:50%;background:#0891b2;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800">SN</div><span class="tb2">Sara Nair</span></div></td><td class="tm">sara.n@email.com</td><td><span class="badge bamber">New</span></td><td style="font-weight:600">1</td><td class="tm" style="color:var(--muted)">₹899</td><td class="tm">May 01</td><td><button class="btn bsm bs" onclick="notify('Profile opened')">View</button></td></tr>
+        </tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div class="ct"><div class="ctico" style="background:var(--gold-l)">🎁</div>Send Offer / Coupon</div></div>
+        <div class="fg" style="margin-bottom:10px"><label>Select Customer Segment</label><select><option>All Customers</option><option>VIP Members</option><option>Inactive (30+ days)</option><option>High Spenders</option><option>New Customers</option></select></div>
+        <div class="fg" style="margin-bottom:10px"><label>Offer Type</label><select><option>Discount Code</option><option>Free Product</option><option>Cashback Wallet Credit</option><option>Bundle Deal</option></select></div>
+        <div class="fr" style="margin-bottom:10px">
+          <div class="fg"><label>Discount Value</label><input type="number" placeholder="20%"></div>
+          <div class="fg"><label>Expiry</label><input type="date"></div>
+        </div>
+        <div class="fg" style="margin-bottom:12px"><label>Message</label><textarea placeholder="Hey! We have an exclusive offer just for you..."></textarea></div>
+        <div class="trow" style="padding:8px 0"><div><div class="ti-name">Send via Email</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <div class="trow" style="padding:8px 0 12px"><div><div class="ti-name">Send Push Notification</div></div><div class="tog on" onclick="this.classList.toggle('on')"></div></div>
+        <button class="btn bp bfull" onclick="notify('Offer sent to segment!')">🚀 Send Offer</button>
+      </div>
+    </div>
+  </div>
+
   </div><!-- /content -->
 </main>
 </div><!-- /shell -->
 
 <script>
 /* ── NAV ── */
-const META={dashboard:['Dashboard','Dream Dubai › Overview'],newdraw:['Create New Draw','Draw Management › New Draw'],category:['Categories','Draw Management › Categories'],announce:['Announcements','Draw Management › Announcements'],winner:['Winner Selector','Draw Management › Winner Selector'],payment:['Payments','Finance › Payments'],wallet:['Wallet','Finance › Wallet'],promo:['Promo Codes','Finance › Promotions'],users:['Users','Users › All Users'],support:['Support Tickets','Users › Support'],reports:['Reports','Analytics › Reports'],settings:['Settings','System › Settings']};
+const META={dashboard:['Dashboard','Dream Dubai › Overview'],newdraw:['Create New Draw','Draw Management › New Draw'],category:['Categories','Draw Management › Categories'],announce:['Announcements','Draw Management › Announcements'],winner:['Winner Selector','Draw Management › Winner Selector'],payment:['Payments','Finance › Payments'],wallet:['Wallet','Finance › Wallet'],promo:['Promo Codes','Finance › Promotions'],users:['Users','Users › All Users'],support:['Support Tickets','Users › Support'],reviews:['Reviews & Ratings','Users › Reviews'],reports:['Reports','Analytics › Reports'],settings:['Settings','System › Settings'],'ec-overview':['Store Overview','E-Commerce › Overview'],'ec-products':['Products','E-Commerce › Products'],'ec-orders':['Orders','E-Commerce › Orders'],'ec-inventory':['Inventory','E-Commerce › Inventory'],'ec-revenue':['Revenue','E-Commerce › Revenue'],'ec-customers':['Customers','E-Commerce › Customers']};
 function go(id,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.ni').forEach(b=>b.classList.remove('active'));
